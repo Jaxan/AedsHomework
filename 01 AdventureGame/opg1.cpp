@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 #include <limits>
+#include <stdexcept>
 
 
 /*
@@ -16,15 +17,15 @@ using namespace std;	// slechte stijl...
 
 class Kamer; 			// forward decleration
 
+
 class Uitgang {
 public:
-	std::string sleutel;
-	Kamer * nextKamer;
+	Kamer const * nextKamer;
 	Uitgang * next;
-
+	std::string sleutel;
 	
 	// wij prefereren const als een postfix (zoals c ooit ontworpen is)
-	Uitgang (char const * sleutel, Kamer * nextKamer ) : sleutel(sleutel), nextKamer(nextKamer), next(NULL) {
+	Uitgang (char const * sleutel, Kamer const * nextKamer ) : nextKamer(nextKamer), next(NULL), sleutel(sleutel) {
 	}
 
 	void push_back (Uitgang * element) {
@@ -36,26 +37,38 @@ public:
 		}
 	}
 
+	Uitgang const * operator[](const unsigned int index) {
+		Uitgang const * iterator = this;
+		for ( unsigned int i = 0; i < index && iterator != NULL; ++i ) {
+			if (iterator->next != NULL) {
+				iterator = iterator->next;
+			} else {
+				throw out_of_range("Ongeldige index");
+			}
+		}
+		return iterator;
+	}
+
 };
+
 
 class Kamer {
 public:
-	// als we de standaard library van c++ mochten gebruiken, waren we veel sneller (en veiliger, en minder c-ish) klaar...
+	Uitgang * firstUitgang;
 	std::string naam;
 	std::string beschrijving;
 	bool eind;
-	Uitgang * firstUitgang;
-
 
 	// AUW dit (de orginele code) doet pijn, want:
 	// 1. c++ 2003 standaard: "Each name that begins with an underscore is reserved to the implementation for use as a name in the global namespace."
+	//    Dus ik heb de "_naam" veranderd in "naam" enzo (ja dat werkt)
 	// 2. gebruik van "char *" is deprecated ("char const *" of "const char *" moet gebruikt worden)
+	//    Dus ik heb op veel plekken const toegevoegd, ook al is std::string eigenlijk mooier...
 	// FOEI!
-	Kamer (char _naam [], char _beschrijving [], bool _eind) : naam(_naam), beschrijving(_beschrijving), eind(_eind), firstUitgang(NULL) {
-
+	Kamer (char const * naam, char const * beschrijving, bool eind) : firstUitgang(NULL), naam(naam), beschrijving(beschrijving), eind(eind) {
 	}
 
-	void nieuweUitgang (char _sleutel [], Kamer* _naar) {
+	void nieuweUitgang (char const _sleutel [], Kamer const * _naar) {
 		Uitgang * newUitgang = new Uitgang(_sleutel, _naar);
 
 		if ( firstUitgang == NULL ) {
@@ -94,6 +107,7 @@ void leesKamers (ifstream& file) {
 	}
 }
 
+
 void leesUitgangen (ifstream& file) {
 	while (true) {
 		int van;
@@ -115,23 +129,28 @@ void leesUitgangen (ifstream& file) {
 	}
 }
 
-void interaction(Kamer& startKamer){
-	Kamer * nextKamer = &startKamer;
+
+void interaction(Kamer const & startKamer){
+	Kamer const * nextKamer = &startKamer;
 
 	while(true){
-		Kamer& kamer = *nextKamer;
+		Kamer const & kamer = *nextKamer;
 
+		// geef uitleg
 		system("clear");	// werkt niet onder windows?
 		cout << "U bent nu hier: " << kamer.naam << endl;
 		cout << kamer.beschrijving << endl << endl;
 		if ( kamer.eind ) cout << "HOERA, dit is het einde, uw leven is nu compleet" << endl;
-	
+
+		// geef mogelijkheden
 		Uitgang * iterator = kamer.firstUitgang;
 		cout << "Waar wilt u heen?" << endl;
 		for ( unsigned int i = 1; iterator != NULL; ++i ) {
 			cout << i << ". " << iterator->sleutel << endl;
 			iterator = iterator->next;
 		}
+
+		// vraag om keuze (in de vorm van een int);
 		cout << "Maak uw keuze door het getal in te tikken: " << endl;
 		int choice;
 		while (!(cin >> choice)){
@@ -140,25 +159,25 @@ void interaction(Kamer& startKamer){
 			cout << "doe ff normaal" << endl;
 		}
 
-		iterator = kamer.firstUitgang;
-		for ( unsigned int i = 1; i < choice && iterator != NULL; ++i ) {
-			cout << i << ". " << iterator->sleutel << endl;
-			iterator = (iterator->next != NULL) ? iterator->next : iterator;
-		}
-
-		nextKamer = iterator->nextKamer;
+		// ga naar die keuze
+		Uitgang const * chosenUitgang = (*kamer.firstUitgang)[choice-1];
+		nextKamer = chosenUitgang->nextKamer;
 	}
 
 }
 
+
 int main () {
 	// Simpel voorbeeld van directe definities
-	Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false ) ;
-	Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true ) ;
+	Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false );
+	Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true );
+	Kamer  k3  =  Kamer ("Lawl", "We kunnen ook conversaties zo opslaan.", false );
 
-	k1.nieuweUitgang ("blijf hier", &k1 ) ;
-	k1.nieuweUitgang ("ga verder", &k2 ) ;
-	k2.nieuweUitgang ("opnieuw", &k1 ) ;
+	k1.nieuweUitgang ("blijf hier", &k1 );
+	k1.nieuweUitgang ("ga verder", &k2 );
+	k1.nieuweUitgang ("ga naar de easter egg", &k3 );
+	k2.nieuweUitgang ("opnieuw", &k1 );
+	k3.nieuweUitgang ("goeie grap, ik wil terug", &k1 );
 
 	interaction(k1);
 
