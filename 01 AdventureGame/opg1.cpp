@@ -4,6 +4,12 @@
 #include <cstdlib>
 #include <limits>
 #include <stdexcept>
+#include <map>
+
+/*
+Nick Overdijk   3029832
+Joshua Moerman  3009408
+*/
 
 
 /*
@@ -16,6 +22,7 @@
 using namespace std;	// slechte stijl...
 
 class Kamer; 			// forward decleration
+typedef map<unsigned int, Kamer*> Map;
 
 
 class Uitgang {
@@ -23,7 +30,7 @@ public:
 	Kamer const * nextKamer;
 	Uitgang * next;
 	std::string sleutel;
-	
+
 	// wij prefereren const als een postfix (zoals c ooit ontworpen is)
 	Uitgang (char const * sleutel, Kamer const * nextKamer ) : nextKamer(nextKamer), next(NULL), sleutel(sleutel) {
 	}
@@ -81,7 +88,7 @@ public:
 };
 
 
-void leesKamers (ifstream& file) {
+void leesKamers (ifstream& file, Map& kamers) {
 	int aantal;
 	file >> aantal;
 
@@ -98,17 +105,17 @@ void leesKamers (ifstream& file) {
 		string naam;
 		getline(file, naam);
 
-// Conversie van `string' naar `char []' doe je met `naam.c_str()'.
-
 		string beschr;
 		getline(file, beschr);
 
 		cout << nr << " " << is_eind << " " << naam << " " << beschr << endl;
+
+		kamers[nr] = new Kamer(naam.c_str(), beschr.c_str(), is_eind == 'T');
 	}
 }
 
 
-void leesUitgangen (ifstream& file) {
+void leesUitgangen (ifstream& file, Map kamers) {
 	while (true) {
 		int van;
 		file >> van;
@@ -126,6 +133,7 @@ void leesUitgangen (ifstream& file) {
 		getline(file, beschr);
 
 		cout << van << ' ' << naar << ' ' << beschr << endl;
+		kamers[van]->nieuweUitgang(beschr.c_str(), kamers[naar]);
 	}
 }
 
@@ -137,7 +145,11 @@ void interaction(Kamer const & startKamer){
 		Kamer const & kamer = *nextKamer;
 
 		// geef uitleg
+		#ifndef _WIN32
 		system("clear");	// werkt niet onder windows?
+		#else
+		system("cls");
+		#endif
 		cout << "U bent nu hier: " << kamer.naam << endl;
 		cout << kamer.beschrijving << endl << endl;
 		if ( kamer.eind ) cout << "HOERA, dit is het einde, uw leven is nu compleet" << endl;
@@ -168,41 +180,37 @@ void interaction(Kamer const & startKamer){
 
 
 int main () {
-	// Simpel voorbeeld van directe definities
-	Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false );
-	Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true );
-	Kamer  k3  =  Kamer ("Lawl", "We kunnen ook conversaties zo opslaan.", false );
+    try {
+        Map kamers;
 
-	k1.nieuweUitgang ("blijf hier", &k1 );
-	k1.nieuweUitgang ("ga verder", &k2 );
-	k1.nieuweUitgang ("ga naar de easter egg", &k3 );
-	k2.nieuweUitgang ("opnieuw", &k1 );
-	k3.nieuweUitgang ("goeie grap, ik wil terug", &k1 );
+        // Kamers en uitgangangen uit files lezen
+        char in_naam1 [] = "kamers.txt";
+        char in_naam2 [] = "deuren.txt";
+        ifstream kamer_file(in_naam1);
+        ifstream uitg_file (in_naam2);
 
-	interaction(k1);
+        if (! kamer_file) {
+            cout << "Het kamerbestand " << in_naam1 << " kon niet geopend worden.\n";
+            return 1;
+        }
+        if (! uitg_file) {
+            cout << "Het uitgangenbestand " << in_naam2 << " kon niet geopend worden.\n";
+            return 1;
+        }
 
-	// Kamers en uitgangangen uit files lezen
-	/*
-	char in_naam1 [] = "kamers.txt";
-	char in_naam2 [] = "deuren.txt";
-	ifstream kamer_file(in_naam1);
-	ifstream uitg_file (in_naam2);
+        leesKamers (kamer_file, kamers);
+        leesUitgangen (uitg_file, kamers);
 
-	if (! kamer_file) {
-		cout << "Het kamerbestand " << in_naam1 << " kon niet geopend worden.\n";
-		return 1;
-	}
-	if (! uitg_file) {
-		cout << "Het uitgangenbestand " << in_naam2 << " kon niet geopend worden.\n";
-		return 1;
-	}
+        kamer_file.close ();
+        uitg_file.close	();
 
-	leesKamers (kamer_file);
-	leesUitgangen (uitg_file);
+        // doe iets met kamers
 
-	kamer_file.close ();
-	uitg_file.close	();
-	*/
+        interaction(*kamers[0]);
+
+    } catch (exception &e) {
+        std::cout << "Aiiii:" << e.what() << std::endl;
+    }
 
 	return 0;
 }
