@@ -4,91 +4,91 @@
 #include <limits>
 
 /*
-    Algoritmen & Datastrucuren 2011
-    Begin van opgave 1
+	Algoritmen & Datastrucuren 2011
+	Begin van opgave 1
 
-    Pieter koopman, pieter@cs.ru.nl
+	Pieter koopman, pieter@cs.ru.nl
 */
 
 using namespace std;
 
 class Uitgang
 {
-    // de variabelen en methoden van deze klasse
+	// de variabelen en methoden van deze klasse
 };
 
 class Kamer
 {
 private:
-    // de variabelen van deze klasse
+	// de variabelen van deze klasse
 
 public:
-    Kamer (char _naam [], char _beschrijving [], bool _eind){}
+	Kamer (char _naam [], char _beschrijving [], bool _eind){}
 
-    void nieuweUitgang (char _sleutel [], Kamer* _naar){}
+	void nieuweUitgang (char _sleutel [], Kamer* _naar){}
 };
 
 
 void leesKamers (ifstream& file)
 {
-     int aantal;
-     file >> aantal;
+	int aantal;
+	file >> aantal;
 
-     for (int i=0; i<aantal; i++)
-     {   int nr;
-         file >> nr;
+	for (int i=0; i<aantal; i++)
+	{	int nr;
+		file >> nr;
 
-         char is_eind;
-         file >> is_eind;
+		char is_eind;
+		file >> is_eind;
 
-         char newl;
-         file.get (newl);
+		char newl;
+		file.get (newl);
 
-         string naam;
-         getline(file, naam);
+		string naam;
+		getline(file, naam);
 
 // Conversie van `string' naar `char []' doe je met `naam.c_str()'.
 
-         string beschr;
-         getline(file, beschr);
+		string beschr;
+		getline(file, beschr);
 
-         cout << nr << " " << is_eind << " " << naam << " " << beschr << endl;
-     }
+		cout << nr << " " << is_eind << " " << naam << " " << beschr << endl;
+	}
 }
 
 void leesUitgangen (ifstream& file)
 {
-     while (true)
-     {   int van;
-         file >> van;
+	while (true)
+	{	int van;
+		file >> van;
 
-         if (van == -1)
-            return;
+		if (van == -1)
+			return;
 
-         int naar;
-         file >> naar;
+		int naar;
+		file >> naar;
 
-         char sch;
-         file.get (sch);
+		char sch;
+		file.get (sch);
 
-         string beschr;
-         getline(file, beschr);
+		string beschr;
+		getline(file, beschr);
 
-         cout << van << ' ' << naar << ' ' << beschr << endl;
-     }
+		cout << van << ' ' << naar << ' ' << beschr << endl;
+	}
 }
 
 int main ()
 {
-    // Simpel voorbeeld van directe definities
-    Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false ) ;
-    Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true ) ;
+	// Simpel voorbeeld van directe definities
+	Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false ) ;
+	Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true ) ;
 
-    k1.nieuweUitgang ("blijf hier", &k1 ) ;
-    k1.nieuweUitgang ("ga verder", &k2 ) ;
-    k2.nieuweUitgang ("opnieuw", &k1 ) ;
+	k1.nieuweUitgang ("blijf hier", &k1 ) ;
+	k1.nieuweUitgang ("ga verder", &k2 ) ;
+	k2.nieuweUitgang ("opnieuw", &k1 ) ;
 
-    // Kamers en uitgangangen uit files lezen
+	// Kamers en uitgangangen uit files lezen
 	char in_naam1 [] = "kamers.txt";
 	char in_naam2 [] = "deuren.txt";
 	ifstream kamer_file(in_naam1);
