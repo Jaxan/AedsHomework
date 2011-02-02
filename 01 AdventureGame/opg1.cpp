@@ -12,13 +12,11 @@
 
 using namespace std;
 
-class Uitgang
-{
+class Uitgang {
 	// de variabelen en methoden van deze klasse
 };
 
-class Kamer
-{
+class Kamer {
 private:
 	// de variabelen van deze klasse
 
@@ -29,13 +27,12 @@ public:
 };
 
 
-void leesKamers (ifstream& file)
-{
+void leesKamers (ifstream& file) {
 	int aantal;
 	file >> aantal;
 
-	for (int i=0; i<aantal; i++)
-	{	int nr;
+	for (int i=0; i<aantal; i++) {
+		int nr;
 		file >> nr;
 
 		char is_eind;
@@ -56,10 +53,9 @@ void leesKamers (ifstream& file)
 	}
 }
 
-void leesUitgangen (ifstream& file)
-{
-	while (true)
-	{	int van;
+void leesUitgangen (ifstream& file) {
+	while (true) {
+		int van;
 		file >> van;
 
 		if (van == -1)
@@ -78,8 +74,7 @@ void leesUitgangen (ifstream& file)
 	}
 }
 
-int main ()
-{
+int main () {
 	// Simpel voorbeeld van directe definities
 	Kamer  k1  =  Kamer ("Startkamer", "Dit is het begin van de reis.", false ) ;
 	Kamer  k2  =  Kamer ("Eindstation", "Dit is de laatste kamer.", true ) ;
@@ -94,13 +89,11 @@ int main ()
 	ifstream kamer_file(in_naam1);
 	ifstream uitg_file (in_naam2);
 
-	if (! kamer_file)
-	{
+	if (! kamer_file) {
 		cout << "Het kamerbestand " << in_naam1 << " kon niet geopend worden.\n";
 		return 1;
 	}
-	if (! uitg_file)
-	{
+	if (! uitg_file) {
 		cout << "Het uitgangenbestand " << in_naam2 << " kon niet geopend worden.\n";
 		return 1;
 	}
