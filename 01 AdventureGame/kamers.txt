@@ -1,0 +1,58 @@
+19
+0 F
+Start 
+Het begin van de opgave, heb je opdracht begrepen?
+1 F
+Voorbeelden 
+Voorbeeldjes gemaakt?
+2 F
+Pointers
+Pointers en adressen onder de knie?
+3 F
+Ontwerp
+Goed ontwerp gemaakt?
+4 F
+Implementatie
+Netjes geimplementeerd?
+5 F
+Testen
+Je bent nu aan het testen. Problemen?
+6 F
+Hulp
+Wie wil je dat je helpt?
+7 F
+HG00.023
+Dat is een goede vraag. Zullen we er samen eens over nadenken?
+8 F
+HG02.068
+Sjaak: college gevolgd en dictaat begrepen?
+9 F
+HG02.616
+Pieter: Heb je een tekening van pointers en objecten gemaakt?
+10 F
+Doolhof
+Je bent in een doolhof van pointers beland.
+11 F
+Doolhof
+Je bent beland in een doolhof van pointers.
+12 F
+Doolhof
+Je bent in een doolhof beland van pointers.
+13 F
+Doolhof
+In een doolhof van pointers ben je beland.
+14 F
+Doolhof
+Je bent in een doolhof vol met pointers.
+15 F
+Doolhof
+Hier helpt alleen een goed ontwerp.
+16 F
+Wizard
+Welkom bij de MS Wizard.
+17 F
+Windows
+De MS Wizard helpt je verder.
+18 T
+Eind
+Eindpunt bereikt, je kunt de opdracht inleveren.

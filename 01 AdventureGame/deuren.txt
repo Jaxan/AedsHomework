@@ -1,0 +1,67 @@
+0 0 nee
+0 1 ja 
+0  6 help
+1  2 ja
+1  1 nee
+1  6 help
+2  3 ja
+2  11 nee
+2  6 help
+3  4 ja
+3  12 nee
+3  6 help
+4  5 ja
+4  13 nee
+5  11 ja
+5  18 nee
+11  12 noord
+11  11 oost
+11  15 zuid
+11  15 west
+11  16 help
+12  12 noord
+12  13 oost
+12  11 zuid
+12  15 west
+12  16 help
+13  11 noord
+13  15 oost
+13  14 zuid
+13  12 west
+13  16 help
+14  11 noord
+14  12 oost
+14  15 zuid
+14  1 west
+14  16 help
+15  15 noord
+15  15 oost
+15  15 zuid
+15  11 west
+15  16 help
+6  8 sjaak
+6  9 pieter
+6  16 microSoft Wizard
+6  7 assistent
+6  7 medestudent
+7  6 nee dank je
+7  0 ja, goed plan
+8  0 ja
+8  8 nee
+8  6 weet niet
+9  4 ja
+9  10 nee
+9  6 help
+10  2 ja
+10  10 nee
+10  6 help
+16  15 ok
+16  6 help
+16  17 nee, dank u 
+17  17 gebruikt u de nieuwste versie van de software?
+17  17 heeft u de laatste update van het net gehaald?
+17  16 domein specifieke hulp?
+17  0 restart
+18  0 opnieuw
+18  6 help
+-1
