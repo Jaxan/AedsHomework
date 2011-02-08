@@ -27,7 +27,7 @@ public:
             if (!file) break;
 
             std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
-            setAfstand(van, naar, afstand); // -1 wegens array indices
+            setAfstand(van, naar, afstand); //Geen -1 vanwege map indices
         }
 
     }
@@ -35,25 +35,24 @@ public:
     virtual ~Verbinding() {}
 
     int getGrootte() const {
-        if (stations > 0)
+        if (stations > 0) {
             return stations;
-        else
+        } else {
             throw std::logic_error("Leeg netwerk");
+        }
     }
 
     int getAfstand(int van, int naar) const {
-        if (van >= 1 && van < stations && naar >= 1 && naar < stations)
+        if (afstand.find(van) != afstand.end() && afstand[van].find(naar) != afstand.end() {
             return afstand[van][naar];
-        else {
-            std::stringstream stream("Illegaal station nummer in ");
-            stream << van+1 << ", " << naar+1;
-            throw std::out_of_range(stream.str());
+        } else {
+            return std::numeric_limits<int>::max();
         }
     }
 
 private:
     int stations;
-    std::map<int <std::map<int, int>> afstand;
+    std::map<int <std::map<int, int> > afstand;
 
     void setAfstand(int van, int naar, int lengte) {
         if (van >= 1 && van < stations && naar >= 1 && naar < stations) {
