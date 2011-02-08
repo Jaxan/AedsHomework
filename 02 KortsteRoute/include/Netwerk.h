@@ -1,6 +1,19 @@
 #ifndef NETWERK_H
 #define NETWERK_H
 
+#include <limits>
+
+
+struct Station {
+
+    bool bezocht;
+    int afstand;
+
+    Station() : bezocht(false), afstand(std::numeric_limits<int>::max()) {}
+
+};
+
+
 
 class Netwerk {
 public:

@@ -8,6 +8,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <vector>
+#include <algorithm>
 
 
 class NetwerkMatrix : public Netwerk {
@@ -61,6 +63,46 @@ public:
     }
 
 
+    void kortsteRoute(int van, int naar) const {
+        std::vector<Station> afstandenTotStations(getGrootte());
+        std::vector<int> backtrace;
+        afstandenTotStations[van].bezocht = true;
+        afstandenTotStations[van].afstand = 0;
+
+        int huidigStation = van;
+        backtrace.push_back(huidigStation);
+
+        while (huidigStation != naar) {
+
+            int minAfstand = std::numeric_limits<int>::max();
+            int minStation = -1;
+
+            for ( int i = 0; i < getGrootte(); ++i){
+                if ( i == huidigStation ) continue;
+                int afstand = afstandenTotStations[huidigStation].afstand + getAfstand(huidigStation, i);
+
+                if ( afstand < afstandenTotStations[i].afstand ) {
+                    afstandenTotStations[i].afstand = afstand;
+                }
+
+                afstand = afstandenTotStations[i].afstand;
+
+                if ( !afstandenTotStations[i].bezocht && afstand < minAfstand ) {
+                    minAfstand = afstand;
+                    minStation = i;
+                }
+            }
+
+            afstandenTotStations[minStation].bezocht = true;
+            huidigStation = minStation;
+            backtrace.push_back(huidigStation);
+
+        }
+
+        std::cout << "kortste pad is " << afstandenTotStations[naar].afstand << "km :D" << std::endl;
+        std::for_each(backtrace.begin(), backtrace.end(), [] (int x) {std::cout << x << std::endl;} );
+
+    }
 
 
 private:

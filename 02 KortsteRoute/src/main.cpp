@@ -7,7 +7,7 @@ int main() {
 
         NetwerkMatrix test("sporen.txt");
 
-        std::cout << "Mijn station heeft de grootte: " << test.grootte() << std::endl;
+        std::cout << "Mijn station heeft de grootte: " << test.getGrootte() << std::endl;
 
     } catch (std::exception const& e) {
 
