@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1297196482 source:c:\users\nick\desktop\aidshomework\02 kortsteroute\src\main.cpp
+	<iostream>
+	"../include/NetwerkMatrix.h"
+
+1297196811 c:\users\nick\desktop\aidshomework\02 kortsteroute\include\netwerkmatrix.h
+	"Netwerk.h"
+	<limits>
+	<iostream>
+	<fstream>
+	<sstream>
+	<stdexcept>
+
+1297196750 c:\users\nick\desktop\aidshomework\02 kortsteroute\include\netwerk.h
+

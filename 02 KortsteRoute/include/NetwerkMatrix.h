@@ -1,55 +1,63 @@
 #ifndef NETWERKMATRIX_H
 #define NETWERKMATRIX_H
 
+#include "Netwerk.h"
+
 #include <limits>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
 
 
-class NetwerkMatrix {
+class NetwerkMatrix : public Netwerk {
 public:
     NetwerkMatrix(std::string fileName) : stations(-1) {
-
         std::ifstream file(fileName);
+        if (!file) throw std::runtime_error("Ik kon het bestand "+fileName+" niet lezen");
 
-        Scanner scanner = new Scanner(new FileReader(file));
+        file >> stations;
 
-        stations = scanner.nextInt();
-        System.out.println("Dit netwerk heeft "+stations+" stations");
-        scanner.nextLine();
-        afstand = new int [stations] [stations];
+        std::cout << "Dit netwerk heeft " << stations << " stations" << std::endl;
+
+        afstand = new int [stations*stations];
+        std::fill_n(afstand, stations*stations, std::numeric_limits<int>::max());
+
         for (int i = 0; i < stations; i += 1)
-            for (int j = 0; j < stations; j += 1)
-                afstand[i][j] = i == j ? 0 : std::numeric_limits<int>::max();
+            afstand[i + stations*i] = 0;
 
-        while (scanner.hasNextLine()) {
+        while (true) {
             int van, naar, afstand;
-            van     = scanner.nextInt();
-            naar    = scanner.nextInt();
-            afstand = scanner.nextInt();
-            System.out.println("Er is een spoor van "+van+" naar "+naar+" met lengte "+afstand);
+            file >> van >> naar >> afstand;
+
+            if (!file) break;
+
+            std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
             setAfstand(van-1, naar-1, afstand); // -1 wegens array indices
-            scanner.nextLine();
         }
 
     }
 
     virtual ~NetwerkMatrix() {
-
+        delete[] afstand;
     }
 
 
-    int  grootte() {
+    int getGrootte() const {
         if (stations > 0)
             return stations;
         else
-            throw new Exception("Leeg netwerk");
+            throw std::logic_error("Leeg netwerk");
     }
 
-    int  getAfstand(int van, int naar) throws Exception {
-        if (van >= 0 && van < stations && naar >= 0 && naar < stations) {
-            return afstand[van][naar];
-        } else
-            throw new Exception("Illegaal station nummer in "+(van+1)+", "+(naar+1));
+    int getAfstand(int van, int naar) const {
+        if (van >= 0 && van < stations && naar >= 0 && naar < stations)
+            return afstand[van + stations*naar];
+        else {
+            std::stringstream stream("Illegaal station nummer in ");
+            stream << van+1 << ", " << naar+1;
+            throw std::out_of_range(stream.str());
+        }
     }
 
 
@@ -62,10 +70,13 @@ private:
 
     void setAfstand(int van, int naar, int lengte) {
         if (van >= 0 && van < stations && naar >= 0 && naar < stations) {
-            afstand[van][naar] = lengte;
-            afstand[naar][van] = lengte;
-        } else
-            throw new Exception("Illegaal station nummer in "+(van+1)+", "+(naar+1));
+            afstand[van + stations*naar] = lengte;
+            afstand[naar + stations*van] = lengte;
+        } else {
+            std::stringstream stream("Illegaal station nummer in ");
+            stream << van+1 << ", " << naar+1;
+            throw std::out_of_range(stream.str());
+        }
     }
 };
 
