@@ -3,12 +3,7 @@
 
 #include "Netwerk.h"
 
-#include <limits>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-
+#include <map>
 
 class Verbinding : public Netwerk {
 public:
@@ -18,7 +13,7 @@ public:
 
         file >> stations;
 
-        std::cout << "Dit netwerk heeft " << stations << " stations" << std::endl;
+        //std::cout << "Dit netwerk heeft " << stations << " stations" << std::endl;
 
         while (true) {
             int van, naar, afstand;
@@ -26,7 +21,7 @@ public:
 
             if (!file) break;
 
-            std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
+            //std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
             setAfstand(van, naar, afstand); //Geen -1 vanwege map indices
         }
 
@@ -42,25 +37,25 @@ public:
         }
     }
 
-    int getAfstand(int van, int naar) const {
-        if (afstand.find(van) != afstand.end() && afstand[van].find(naar) != afstand.end() {
+    int getAfstand(int van, int naar) {
+        if (afstand.find(van) != afstand.end() && afstand[van].find(naar) != afstand[van].end()) {
             return afstand[van][naar];
         } else {
-            return std::numeric_limits<int>::max();
+            return INF;
         }
     }
 
 private:
     int stations;
-    std::map<int <std::map<int, int> > afstand;
+    std::map<int, std::map<int, int>> afstand;     // als dit niet compileert, hebt je een prehistorische versie van een c++ compiler
 
     void setAfstand(int van, int naar, int lengte) {
-        if (van >= 1 && van < stations && naar >= 1 && naar < stations) {
+        if (van >= 1 && van <= stations && naar >= 1 && naar <= stations) {
             afstand[van][naar] = lengte;
             afstand[naar][van] = lengte;
         } else {
-            std::stringstream stream("Illegaal station nummer in ");
-            stream << van << ", " << naar;
+            std::stringstream stream;
+            stream << "Illegaal station nummer in " << van << ", " << naar;
             throw std::out_of_range(stream.str());
         }
     }

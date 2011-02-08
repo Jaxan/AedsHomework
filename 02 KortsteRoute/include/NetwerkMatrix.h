@@ -3,14 +3,6 @@
 
 #include "Netwerk.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
-#include <vector>
-#include <deque>
-#include <algorithm>
-
 
 class NetwerkMatrix : public Netwerk {
 public:
@@ -20,7 +12,7 @@ public:
 
         file >> stations;
 
-        std::cout << "Dit netwerk heeft " << stations << " stations" << std::endl;
+        //std::cout << "Dit netwerk heeft " << stations << " stations" << std::endl;
 
         afstand = new int [stations*stations];
         std::fill_n(afstand, stations*stations, INF);
@@ -34,7 +26,7 @@ public:
 
             if (!file) break;
 
-            std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
+            //std::cout << "Er is een spoor van " << van << " naar " << naar << " met lengte " << afstand << std::endl;
             setAfstand(van-1, naar-1, afstand); // -1 wegens array indices
         }
 
@@ -52,7 +44,9 @@ public:
             throw std::logic_error("Leeg netwerk");
     }
 
-    int getAfstand(int van, int naar) const {
+    int getAfstand(int van, int naar) {
+        van--;
+        naar--;
         if (van >= 0 && van < stations && naar >= 0 && naar < stations)
             return afstand[van + stations*naar];
         else {
@@ -60,58 +54,6 @@ public:
             stream << van+1 << ", " << naar+1;
             throw std::out_of_range(stream.str());
         }
-    }
-
-
-    void kortsteRoute(int van, int naar) const {
-        std::vector<Station> afstandenTotStations(getGrootte());
-        van--; naar--;
-        afstandenTotStations[van].bezocht = true;
-        afstandenTotStations[van].afstand = 0;
-
-        int huidigStation = van;
-
-        while (huidigStation != naar) {
-
-            int minAfstand = INF;
-            int minStation = -1;
-
-            for ( int i = 0; i < getGrootte(); ++i){
-                //if ( i == huidigStation ) continue;
-                int afstand = afstandenTotStations[huidigStation].afstand + getAfstand(huidigStation, i);
-
-                if ( afstand < INF ) std::cout << huidigStation+1 << "->" << i+1 << ": " << afstand << std::endl;
-
-                if ( afstand < afstandenTotStations[i].afstand ) {
-                    afstandenTotStations[i].afstand = afstand;
-                    afstandenTotStations[i].vorige = huidigStation;
-                }
-
-                afstand = afstandenTotStations[i].afstand;
-
-                if ( !afstandenTotStations[i].bezocht && afstand < minAfstand ) {
-                    std::cout << '\t' << i+1 << " met " << afstand << " is betrer dan " << minAfstand << std::endl;
-                    minAfstand = afstand;
-                    minStation = i;
-                }
-            }
-
-            if ( minStation == -1 ) throw std::logic_error("Er is geen goed station gevonden, dat is vreemd...");
-
-            afstandenTotStations[minStation].bezocht = true;
-            huidigStation = minStation;
-
-        }
-
-        std::cout << "kortste pad is " << afstandenTotStations[huidigStation].afstand << "km :D" << std::endl;
-
-        std::deque<int> reversedArrayList;
-        while ( huidigStation != -1 ) {
-            reversedArrayList.push_front(huidigStation);
-            huidigStation = afstandenTotStations[huidigStation].vorige;
-        }
-        std::for_each(reversedArrayList.begin(), reversedArrayList.end(), [] (int x) { std::cout << x+1 << ", "; } );
-
     }
 
 
@@ -125,8 +67,8 @@ private:
             afstand[van + stations*naar] = lengte;
             afstand[naar + stations*van] = lengte;
         } else {
-            std::stringstream stream("Illegaal station nummer in ");
-            stream << van+1 << ", " << naar+1;
+            std::stringstream stream;
+            stream << "Illegaal station nummer in " << van+1 << ", " << naar+1;
             throw std::out_of_range(stream.str());
         }
     }
