@@ -32,7 +32,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="include\Netwerk.h" />
 		<Unit filename="include\NetwerkMatrix.h" />
+		<Unit filename="src\main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
