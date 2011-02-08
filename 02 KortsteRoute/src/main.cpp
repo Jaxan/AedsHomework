@@ -8,6 +8,7 @@ int main() {
         NetwerkMatrix test("sporen.txt");
 
         std::cout << "Mijn station heeft de grootte: " << test.getGrootte() << std::endl;
+        test.kortsteRoute(14, 10);
 
     } catch (std::exception const& e) {
 

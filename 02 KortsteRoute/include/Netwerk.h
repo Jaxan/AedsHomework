@@ -3,13 +3,16 @@
 
 #include <limits>
 
+#define INF (1000000)
+
 
 struct Station {
 
     bool bezocht;
     int afstand;
+    int vorige;
 
-    Station() : bezocht(false), afstand(std::numeric_limits<int>::max()) {}
+    Station() : bezocht(false), afstand(INF), vorige(-1) {}
 
 };
 
