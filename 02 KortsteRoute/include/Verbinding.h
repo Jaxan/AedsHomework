@@ -1,3 +1,6 @@
+// Nick Overdijk 3029832
+// Joshua Moerman 3009408
+
 #ifndef VERBINDING_H
 #define VERBINDING_H
 
@@ -5,11 +8,15 @@
 
 #include <map>
 
+/*
+ruimte complexiteit is O(n), duidelijk beter
+*/
+
 class Verbinding : public Netwerk {
 public:
 	Verbinding(std::string fileName) {
 		std::ifstream file(fileName);
-		if(!file) throw std::runtime_error("Ik kon het bestand "+fileName+" niet lezen");
+		if(!file) throw std::runtime_error(std::string(__FILE__) + "::" + std::string(__func__) + ": Ik kon het bestand "+fileName+" niet lezen");
 
 		file >> stations;
 
@@ -33,7 +40,7 @@ public:
 		if(stations > 0) {
 			return stations;
 		} else {
-			throw std::logic_error("Leeg netwerk");
+			throw std::logic_error(std::string(__FILE__) + "::" + std::string(__func__) + ": Leeg netwerk");
 		}
 	}
 
@@ -55,7 +62,7 @@ private:
 			afstand[naar][van] = lengte;
 		} else {
 			std::stringstream stream;
-			stream << "Illegaal station nummer in " << van << ", " << naar;
+			stream << __FILE__ << "::" << __func__ << ": Illegaal station nummer in " << van << ", " << naar;
 			throw std::out_of_range(stream.str());
 		}
 	}

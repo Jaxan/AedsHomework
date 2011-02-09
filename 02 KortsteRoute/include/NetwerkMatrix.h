@@ -1,14 +1,22 @@
+// Nick Overdijk 3029832
+// Joshua Moerman 3009408
+
 #ifndef NETWERKMATRIX_H
 #define NETWERKMATRIX_H
 
 #include "Netwerk.h"
+
+/*
+ruimte complexiteit is O(n^2)
+tijd complexiteit is O(n^2) (de lookup in de matrix is constant, en per node, moet je (bijna) alle nodes langsgaan, dus dat is van de orde n^2)
+*/
 
 
 class NetwerkMatrix : public Netwerk {
 public:
 	NetwerkMatrix(std::string fileName) : stations(-1) {
 		std::ifstream file(fileName);
-		if(!file) throw std::runtime_error("Ik kon het bestand "+fileName+" niet lezen");
+		if(!file) throw std::runtime_error(std::string(__FILE__) + "::" + std::string(__func__) + ": Ik kon het bestand "+fileName+" niet lezen");
 
 		file >> stations;
 
@@ -41,7 +49,7 @@ public:
 		if(stations > 0)
 			return stations;
 		else
-			throw std::logic_error("Leeg netwerk");
+			throw std::logic_error(std::string(__FILE__) + "::" + std::string(__func__) + ": Leeg netwerk");
 	}
 
 	int getAfstand(int van, int naar) {
@@ -50,8 +58,8 @@ public:
 		if(van >= 0 && van < stations && naar >= 0 && naar < stations)
 			return afstand[van + stations*naar];
 		else {
-			std::stringstream stream("Illegaal station nummer in ");
-			stream << van+1 << ", " << naar+1;
+			std::stringstream stream;
+			stream << __FILE__ << "::" << __func__ << ": Illegaal station nummer in " << van+1 << ", " << naar+1;
 			throw std::out_of_range(stream.str());
 		}
 	}
@@ -68,7 +76,7 @@ private:
 			afstand[naar + stations* van] = lengte;
 		} else {
 			std::stringstream stream;
-			stream << "Illegaal station nummer in " << van+1 << ", " << naar+1;
+			stream << __FILE__ << "::" << __func__ << ": Illegaal station nummer in " << van+1 << ", " << naar+1;
 			throw std::out_of_range(stream.str());
 		}
 	}

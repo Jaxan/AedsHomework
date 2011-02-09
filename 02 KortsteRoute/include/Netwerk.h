@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <vector>
 #include <deque>
+// Nick Overdijk 3029832
+// Joshua Moerman 3009408
+
 #include <algorithm>
 
 #define INF (1000000)
@@ -65,7 +68,7 @@ public:
 				}
 			}
 
-			if(minStation == -1) throw std::logic_error("Er is geen goed station gevonden, dat is vreemd...");
+			if(minStation == -1) throw std::logic_error(std::string(__FILE__) + "::" + std::string(__func__) + "Er is geen goed station gevonden, dat is vreemd...");
 
 			afstandenTotStations[minStation].bezocht = true;
 			huidigStation = minStation;
@@ -92,9 +95,6 @@ public:
 
 	}
 
-
-protected:
-private:
 };
 
 #endif // NETWERK_H
