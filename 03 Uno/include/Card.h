@@ -64,6 +64,7 @@ private:
 };
 
 std::ostream& operator<< (std::ostream& out, const Card& rh) {
+	out << '[';
 	switch (rh.kind) {
 		case Card::Yellow:
 			out << "Geel"; break;
@@ -87,17 +88,17 @@ std::ostream& operator<< (std::ostream& out, const Card& rh) {
 		default:
 			switch (rh.value) {
 				case Card::Pick2:
-					out << " 2 pakken";
+					out << " 2 pakken"; break;
 				case Card::Turn:
-					out << " keer om";
+					out << " keer om"; break;
 				case Card::Skip:
-					out << " beurt overslaan";
+					out << " beurt overslaan"; break;
 				default:
-					out << " " << rh.value;
+					out << " " << rh.value; break;
 			}
 	}
 
-	return out;
+	return (out << ']');
 }
 
 #endif // CARD_H
