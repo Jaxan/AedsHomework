@@ -12,38 +12,6 @@ import java.util.Random;
  */
 public class LijstBegin <T>
 {
-    /**
-     * De lijst bestaat uit knopen met een element en een volgende knoop
-     * static want gebruikt niets van Lijst
-     */
-    private static class Knoop <E>
-    {
-        /**
-         * Iedere knoop bevat een element en een volgende knoop
-         * geen getters en setters nodig omdat Knoop lokaal is in Lijst,
-         * de Lijst weet dus al alles van de Knoop
-         */
-        private E inhoud;
-        private Knoop <E> volgende;
-
-        /**
-         * Constructor voor knoop zonder opvolger
-         * @param e
-         */
-        private Knoop (E e)
-        {
-            this (e, null);
-        }
-
-        /**
-         * Constructor voor knoop met opvolger
-         * @param e de inhoud
-         * @param k de opvolger
-         */
-        private Knoop (E e, Knoop k)
-        {
-        }
-    }
 
     /**
      * de iteraror voor Lijst

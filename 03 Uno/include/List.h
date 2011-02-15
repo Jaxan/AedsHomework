@@ -2,84 +2,171 @@
 #define JN_LIST_H
 
 #include <cstdlib>
-
+#include <iterator>
+#include <stdexcept>
+#include <string>
 
 namespace JN {
 
-    template <typename T>
-    class List {
-        struct Node {
-            Node(T data) : data(data) {}
-            Node(T data, Node* next) : data(data), next(next) {}
+template <typename T>
+class List {
+	struct Node {
+		Node(T data) : data(data), next(0) {}
+		Node(T data, Node* next) : data(data), next(next) {}
 
-            T data;
-            Node* next;
-        };
+		T data;
+		Node* next;
+	};
 
-        public:
-            List() {
-            }
+	struct iterator : public std::iterator<std::forward_iterator_tag, T> {
+		Node* previous;
+		Node* current;
 
-            ~List() {}
+		iterator() : previous(0), current(0) {}
+		iterator(Node* previous, Node* current) : previous(previous), current(current) {}
+		virtual ~iterator() {}
 
-            bool empty() {
-                return (first != 0);
-            }
+		iterator& operator++() {
+			previous = current;
+			current = current->next;
 
-            size_t size(){
-                return length;
-            }
+			return *this;
+		}
 
-            void push_back(T element){
-                auto end = end();
-                end->volgende = new Node(element);
-            }
+		iterator operator++(int foo) {
+			iterator temp = *this;
 
-            void push_front(T element){
-                auto newNode = new Node(element);
-                newNode->volgende = first;
-                first = newNode;
-            }
+			this->operator++();
 
-            void push(T element){
-                auto randomIndex = rand() % length();
-            }
+			return temp;
+		}
 
-            T pop_front(){
-                // Preserve data
-                T data = first->data;
+		T& operator*() const {
+			return current->data;
+		}
 
-                // Replace and delete first
-                auto to_be_deleted = first;
-                first = first->next;
-                delete to_be_deleted;
+		T* operator->() const {
+			return &current->data;
+		}
 
-                return data;
-            }
+		void remove() {
+			if(previous == 0) {
+				throw std::out_of_range("iterator::" + (std::string)(__func__) + ": Can't touch this, THUM-DUDU-DUM, TUDU, TUDU");
+			}
 
-            T operator[] (size_t index){
-                return at(index)->data;
-            }
+			previous->next = current->next;
+			delete current;
+			current = previous;
+		}
 
-            Node* at (size_t index){
-                auto it = first;
-                while(index-- && it->next != 0) it = it->next;
-                return it;
-            }
+		bool operator==(const iterator& rh) {
+			return(previous == rh.previous && current == rh.current);
+		}
 
-        private:
-            friend std::ostream& operator<<(std::ostream &out, const List<T>& rh);
+		bool operator!=(const iterator& rh) {
+			return !(*this == rh);
+		}
 
-            Node* first;
-            size_t length;
+	};
 
-    };
+public:
+	List() :
+		first(0),
+		last(0) {
+	}
 
-    template <typename T>
-    std::ostream& operator<<(std::ostream &out, const List<T>& rh){
-        static_assert(false, "Poep shit uit ouwe");
-        return out;
-    }
+	~List() {}
+
+	bool empty() {
+		return (first != 0);
+	}
+
+	size_t size() {
+		size_t length = 0;
+		for(auto it = begin(); it != end(); it++) { length++; }
+		return length;
+	}
+
+	void push_back(T element) {
+		if(last == 0) {
+			push_front(element);
+			return;
+		}
+		last->next = new Node(element);
+		last = last->next;
+	}
+
+	void push_front(T element) {
+		auto newNode = new Node(element);
+		newNode->next = first;
+		first = newNode;
+		if(last == 0) {
+			last = first;
+		}
+	}
+
+	void push(T element) {
+		size_t length = size();
+		auto randomIndex = rand() % (length + 1);
+		if(randomIndex == length) push_back(element);
+		else if(randomIndex == 0) push_front(element);
+		else {
+			auto newNode = new Node(element);
+			auto previous = at(randomIndex-1);
+			newNode->next = previous->next;
+			previous->next = newNode;
+		}
+	}
+
+	T pop_front() {
+		// Preserve data
+		T data = first->data;
+
+		// Replace and delete first
+		auto to_be_deleted = first;
+		first = first->next;
+		delete to_be_deleted;
+
+		return data;
+	}
+
+	T operator[](size_t index) {
+		return at(index)->data;
+	}
+
+	Node* at(size_t index) {
+		auto it = first;
+		while(index--) {
+			if(it->next == 0) {
+				throw std::out_of_range("list::" + (std::string)(__func__) + ": Can't touch this, THUM-DUDU-DUM, TUDU, TUDU");
+			}
+
+			it = it->next;
+		}
+		return it;
+	}
+
+	iterator begin() {
+		return iterator(0, first);
+	}
+
+	iterator end() {
+		return iterator(last, (last == 0) ? 0 : last->next);
+	}
+
+private:
+	template <typename U> friend std::ostream& operator<<(std::ostream& out, const List<U>& rh);
+
+	Node* first;
+	Node* last;
+
+};
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, List<T>& rh) {
+	std::copy(rh.begin(), rh.end(), std::ostream_iterator<T>(out, " "));
+	return out;
+}
 }
 
 #endif // JN_LIST_H
