@@ -1,7 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "include/List.h"
+#include <iostream>
+
+#include "Card.h"
+#include "List.h"
 
 class Player
 {
@@ -10,14 +13,22 @@ class Player
         virtual ~Player() {}
 
         void prompt(){
+            std::cout << hand << std::endl;
             std::cout << "Speel deze kaart: ";
             std::cin >> choice;
         }
 
         void makeChoice(const JN::List<Card> &currentStack){
-            for(auto it = hand.begin(); it != hand.end(); ++it){
-                if(it->
+            auto topCard = *currentStack.begin();
+
+            for(size_t i = 0, auto it = hand.begin(); it != hand.end(); ++it, ++i){
+                if(it->fitsOn(top)){
+                    choice = i;
+                    break;
+                }
             }
+
+            choice = 0;
         }
 
         void play(){
