@@ -40,6 +40,14 @@ public:
 		std::cout << "De pakstapel: " << uberStack << std::endl;
 		std::cout << "De dump: " << dumpStack << std::endl;
 
+		person.setStacks(uberStack, dumpStack);
+		computer.setStacks(uberStack, dumpStack);
+
+		for (unsigned int i = 0; i<7; ++i){
+			person.hand.push_front(uberStack.pop_front());
+			computer.hand.push_front(uberStack.pop_front());
+		}
+
 		play();
 	}
 
@@ -55,7 +63,7 @@ public:
 	        if(currentPlayer == &person){
 	            currentPlayer->prompt();
 	        } else {
-	            currentPlayer->makeChoice(uberStack);
+	            currentPlayer->makeChoice();
 	        }
 
 	        currentPlayer->play();
@@ -75,9 +83,9 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const Game& x) {
-	out << "NPC: " << computer << '\n';
-	out << "PC: " << person << '\n';
-	out << "Kaartjens: " << uberStack << '\n';
+	out << "NPC: " << x.computer << '\n';
+	out << "PC: " << x.person << '\n';
+//	out << "Kaartjens: " << x.uberStack << '\n';
 	return out;
 }
 

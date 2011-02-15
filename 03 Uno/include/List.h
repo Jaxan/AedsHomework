@@ -18,6 +18,10 @@ class List {
 		Node* next;
 	};
 
+	/**
+		We kunnen in iterator geen remove() imeplementeren, omdat deze functie kennis nodig heeft van List (met name de first en last element)
+		Dus zie de erase() functie in List
+	*/
 	struct iterator : public std::iterator<std::forward_iterator_tag, T> {
 		Node* previous;
 		Node* current;
@@ -33,7 +37,7 @@ class List {
 			return *this;
 		}
 
-		iterator operator++(int foo) {
+		iterator operator++(int) {
 			iterator temp = *this;
 
 			this->operator++();
@@ -47,16 +51,6 @@ class List {
 
 		T* operator->() const {
 			return &current->data;
-		}
-
-		void remove() {
-			if(previous == 0) {
-				throw std::out_of_range("iterator::" + (std::string)(__func__) + ": Can't touch this, THUM-DUDU-DUM, TUDU, TUDU");
-			}
-
-			previous->next = current->next;
-			delete current;
-			current = previous;
 		}
 
 		bool operator==(const iterator& rh) {
@@ -78,7 +72,7 @@ public:
 	~List() {}
 
 	bool empty() {
-		return (first != 0);
+		return (first == 0);
 	}
 
 	size_t size() {
@@ -134,15 +128,22 @@ public:
 		return at(index)->data;
 	}
 
-	Node* at(size_t index) {
-		auto it = first;
-		while(index--) {
-			if(it->next == 0) {
-				throw std::out_of_range("list::" + (std::string)(__func__) + ": Can't touch this, THUM-DUDU-DUM, TUDU, TUDU");
-			}
-
-			it = it->next;
+	// we moeten dit in List implementeren, aangezien de eerste of laatste gewijzigd kan worden.
+	iterator& erase(iterator& it) {
+		if(it.current == first) {
+			pop_front();
+			it.current = first;
+			return it;
 		}
+
+		if(it.current == last) {
+			last = it.previous;
+		}
+
+		it.previous->next = it.current->next;
+		delete it.current;
+		it.current = it.previous;
+
 		return it;
 	}
 
@@ -160,6 +161,17 @@ private:
 	Node* first;
 	Node* last;
 
+	Node* at(size_t index) {
+		auto it = first;
+		while(index--) {
+			if(it->next == 0) {
+				throw std::out_of_range("list::" + (std::string)(__func__) + ": Can't touch this, THUM-DUDU-DUM, TUDU, TUDU");
+			}
+
+			it = it->next;
+		}
+		return it;
+	}
 };
 
 template <typename T>
