@@ -6,7 +6,7 @@
 
 class Game {
 public:
-	Game() {
+	Game() : person("Jij"), computer("Een Turing Machine") {
 		for(size_t i = 0; i <= 12; ++i) {	// de getallen + 3 speciale kaarten (van elke kleur 2 stuks)
 			{
 				Card card(Card::Yellow, i);
@@ -37,8 +37,6 @@ public:
 		}
 
         dumpStack.push_front(uberStack.pop_front());
-		std::cout << "De pakstapel: " << uberStack << std::endl;
-		std::cout << "De dump: " << dumpStack << std::endl;
 
 		person.setStacks(uberStack, dumpStack);
 		computer.setStacks(uberStack, dumpStack);
@@ -48,17 +46,17 @@ public:
 			computer.hand.push_front(uberStack.pop_front());
 		}
 
+		std::cout << "Welkom bij UNO deluxe 2000++" << std::endl << std::endl << "Jij mag beginnen :D (met je hoofd)" << std::endl;
+
 		play();
 	}
 
 	virtual ~Game() {}
 
-	friend std::ostream& operator<< (std::ostream& out, const Game& x);
-
 	void play(){
-	    Player * currentPlayer = &person;
+	    currentPlayer = &person;
 	    while(!gameOver()){
-	        std::cout << dumpStack[0] << std::endl;
+	        std::cout << "Er lig nu: " << dumpStack[0] << std::endl;
 
 	        if(currentPlayer == &person){
 	            currentPlayer->prompt();
@@ -70,7 +68,7 @@ public:
 
 	        togglePlayer();
 
-            switch(dumpStack[0]->value){
+            switch(dumpStack[0].getValue()){
                 case Card::Value::Skip:
                 togglePlayer();
                 break;
@@ -87,7 +85,8 @@ public:
 	}
 
 	void togglePlayer(){
-        currentPlayer = (currentPlayer == &person) computer : person;
+        currentPlayer = (currentPlayer == &person)? &computer : &person;
+        std::cout << std::endl << currentPlayer->name << " gaat doen" << std::endl;
     }
 
 
@@ -98,15 +97,10 @@ public:
 	Player computer;
 	Player person;
 
+	Player * currentPlayer;
+
     JN::List<Card> dumpStack;
 	JN::List<Card> uberStack;
 };
-
-std::ostream& operator<<(std::ostream& out, const Game& x) {
-	out << "NPC: " << x.computer << '\n';
-	out << "PC: " << x.person << '\n';
-//	out << "Kaartjens: " << x.uberStack << '\n';
-	return out;
-}
 
 #endif // GAME_H

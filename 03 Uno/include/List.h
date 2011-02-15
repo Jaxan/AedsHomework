@@ -113,6 +113,7 @@ public:
 	}
 
 	T pop_front() {
+		if (empty()) throw std::out_of_range("list::" + (std::string)(__func__) + ": Can't pop this. Thum du du dum. tudu, tudu!");
 		// Preserve data
 		T data = first->data;
 
@@ -130,6 +131,7 @@ public:
 
 	// we moeten dit in List implementeren, aangezien de eerste of laatste gewijzigd kan worden.
 	iterator& erase(iterator& it) {
+		if (empty()) throw std::out_of_range("list::" + (std::string)(__func__) + ": Can't erase this. Whoopiedo!");
 		if(it.current == first) {
 			pop_front();
 			it.current = first;
