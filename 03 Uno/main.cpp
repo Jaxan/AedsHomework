@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "include/List.h"
+#include "include/Card.h"
 
 template <typename T>
 std::ostream& operator<< (std::ostream& out, const std::vector<T>& x) {
@@ -9,6 +10,12 @@ std::ostream& operator<< (std::ostream& out, const std::vector<T>& x) {
 }
 
 int main(int argc, char* argv[]) {
+
+	Card c(Card::Yellow, 4);
+	std::cout << c << std::endl;
+
+	return 0;
+
 	try {
 		JN::List<int> purePwn;
 		std::vector<int> pureTest;
