@@ -67,8 +67,28 @@ public:
 	        }
 
 	        currentPlayer->play();
+
+	        togglePlayer();
+
+            switch(dumpStack[0]->value){
+                case Card::Value::Skip:
+                togglePlayer();
+                break;
+
+                case Card::Value::Pick2:
+                currentPlayer->pick(2);
+                break;
+
+                case Card::Value::Turn:
+                default:
+                break;
+            }
 	    }
 	}
+
+	void togglePlayer(){
+        currentPlayer = (currentPlayer == &person) computer : person;
+    }
 
 
 	bool gameOver() {
