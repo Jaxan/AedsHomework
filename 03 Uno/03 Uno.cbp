@@ -34,6 +34,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="include\Card.h" />
 		<Unit filename="include\List.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

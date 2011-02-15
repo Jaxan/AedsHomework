@@ -11,11 +11,6 @@ std::ostream& operator<< (std::ostream& out, const std::vector<T>& x) {
 
 int main(int argc, char* argv[]) {
 
-	Card c(Card::Yellow, 4);
-	std::cout << c << std::endl;
-
-	return 0;
-
 	try {
 		JN::List<Card> s[3];
 		for(size_t i = 0; i < 10; ++i){
@@ -40,18 +35,18 @@ int main(int argc, char* argv[]) {
             std::cout << *it << "; ";
         std::cout << std::endl;
 
-        auto it = stapel3.iterator();
+        auto it = s[2].begin();
         std::cout << "removing: " << std::endl;
         for (auto it = s[2].begin(); it != s[2].end(); ++it) {
             static size_t i = 0;
             Card card = *it;
             if (i++ % 2){
                 it.remove();
-                std::cout << k2 << "; ";
+                std::cout << card << "; ";
             }
          }
         std::cout << std::endl;
-        std::cout << "De nette stapel bevat nu nog: " << stapel3 << std::endl;
+        std::cout << "De nette stapel bevat nu nog: " << s[2] << std::endl;
 
 		return 0;
 	} catch(std::exception& e) {
