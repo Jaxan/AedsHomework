@@ -59,8 +59,18 @@ public:
 	        }
 
 	        currentPlayer->play();
+
+	        togglePlayer();
+
+	        if(dumpStack[0]->value == Card::Value::Skip){
+	            togglePlayer();
+	        }
 	    }
 	}
+
+	void togglePlayer(){
+        currentPlayer = (currentPlayer == &person) computer : person;
+    }
 
 
 	bool gameOver() {
