@@ -9,6 +9,16 @@
 namespace JN {
 
 template <typename T>
+
+/**
+	We hebben de opdracht in c++ gedaan, dus hebben we ons ook aan de c++ conventies gehouden. Alles is engels, en wel zo:
+		push_back()		voegAchteraanToe()
+		push_front()	voegVooraanToen()
+		push()			voegErgensToe()
+		pop_front()		pakEerst()
+	De iterators zijn standaard c++ iterators, dus je gaat naar het volgende element met de ++ operator, en je krijgt een elemen door te dereferencen (de operator *)
+
+*/
 class List {
 	struct Node {
 		Node(T data) : data(data), next(0) {}
@@ -20,6 +30,7 @@ class List {
 
 	/**
 		We kunnen in iterator geen remove() imeplementeren, omdat deze functie kennis nodig heeft van List (met name de first en last element)
+		We vonden de remove() functie sowieso onduidelijk (hoezo kan je alleen iets removen na een next()?)
 		Dus zie de erase() functie in List
 	*/
 	struct iterator : public std::iterator<std::forward_iterator_tag, T> {
