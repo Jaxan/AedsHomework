@@ -1,3 +1,6 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef JN_LIST_H
 #define JN_LIST_H
 

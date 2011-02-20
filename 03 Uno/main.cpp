@@ -1,3 +1,6 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #include <iostream>
 #include <vector>
 
