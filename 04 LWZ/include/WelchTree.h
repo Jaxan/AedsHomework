@@ -2,6 +2,7 @@
 #define JN_WELCHTREE_H
 
 #include <vector>
+#include <tuple>
 
 namespace JN {
 
@@ -29,7 +30,7 @@ class WelchTree {
 
 public:
 
-	WelchTree() {
+	WelchTree() : dataCount(256) {
 		for(auto it = 0; it < 256; ++it){
 			root_nodes[it].data = root_nodes[it].character = it;
 		}
@@ -37,7 +38,35 @@ public:
 
 	template <typename IteratorType>
 	std::pair<IteratorType, T const *> find(IteratorType begin, IteratorType end) const {
-		const Node* current_node = &root_nodes[*begin];
+		auto pair = find_internal(begin, end);
+		return std::make_pair(pair.first, &pair.second->data);
+	}
+
+	template <typename IteratorType, typename OutputIteratorType>
+	void compress(IteratorType begin, IteratorType end, OutputIteratorType out){
+		while(begin != end){
+			auto pair = find_internal(begin, end);
+			//Write to compressed stream; increment compressed stream output iterator
+			*out++ = pair.second->data;
+
+			Node * node = const_cast<Node*>(pair.second);
+			if(pair.first == end){
+				//Done!
+				return;
+			}
+
+			begin = pair.first;
+			insert(begin, node);
+		}
+
+	}
+
+private:
+	size_t dataCount;
+
+	template <typename IteratorType>
+	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
+		const Node* current_node = &root_nodes[*begin++];
 
 		for(;begin != end;){
 			Node * next_node;
@@ -48,6 +77,7 @@ public:
 			else{
 				next_node = current_node->longer;
 				if(next_node != 0) ++begin;
+				std::cerr << "dieper zoeken\n";
 			}
 
 			if(next_node == 0) break;
@@ -55,34 +85,13 @@ public:
 		}
 
 		//Return the iterator to where we read
-		return std::make_pair(++begin, &current_node->data);
-	}
-
-	template <typename IteratorType, typename OutputIteratorType>
-	void compress(IteratorType begin, IteratorType end, OutputIteratorType out){
-		while(begin != end){
-			auto pair = find(begin, end);
-			//Write to compressed stream; increment compressed stream output iterator
-			*out++ = pair.second;
-
-			if(pair.first == end){
-				//Done!
-				insert(begin, end);
-				return;
-			}
-
-			IteratorType insertion_end = pair.first;
-			++insertion_end;
-
-			insert(begin, insertion_end);
-
-			begin = pair.first;
-		}
-
+		return std::make_pair(begin, current_node);
 	}
 
 	template <typename IteratorType>
-	void insert(IteratorType begin, IteratorType end){
+	void insert(IteratorType begin, Node* node){
+		//std::cout << "adding new node: " << *begin << " at node: " << node->character << "." << node->data << ' ' << dataCount << ' ';
+		if(node->longer == 0) node->longer = new Node(dataCount++, *begin);
 
 	}
 
