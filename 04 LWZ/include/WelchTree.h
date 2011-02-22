@@ -1,6 +1,8 @@
 #ifndef JN_WELCHTREE_H
 #define JN_WELCHTREE_H
 
+#include <vector>
+
 namespace JN {
 
 template <typename T>
@@ -33,26 +35,55 @@ public:
 		}
 	}
 
-	std::pair<size_t, T const *> find(std::string const& key) const {
-		size_t current_index = 0;
-		Node* current_node = &root_nodes[key[current_index++]];
+	template <typename IteratorType>
+	std::pair<IteratorType, T const *> find(IteratorType begin, IteratorType end) const {
+		const Node* current_node = &root_nodes[*begin];
 
-		for(;current_index < key.length();){
+		for(;begin != end;){
 			Node * next_node;
-			char const& current_key = key[current_index];
+			char const& current_key = *begin;
 			char const& compare_key = current_node->character;
 				 if(current_key < compare_key) next_node = current_node->smaller;
 			else if(current_key > compare_key) next_node = current_node->greater;
 			else{
 				next_node = current_node->longer;
-				if(next_node != 0) ++current_index;
+				if(next_node != 0) ++begin;
 			}
 
 			if(next_node == 0) break;
 			current_node = next_node;
 		}
 
-		return std::make_pair(current_index, &current_node->data);
+		//Return the iterator to where we read
+		return std::make_pair(++begin, &current_node->data);
+	}
+
+	template <typename IteratorType, typename OutputIteratorType>
+	void compress(IteratorType begin, IteratorType end, OutputIteratorType out){
+		while(begin != end){
+			auto pair = find(begin, end);
+			//Write to compressed stream; increment compressed stream output iterator
+			*out++ = pair.second;
+
+			if(pair.first == end){
+				//Done!
+				insert(begin, end);
+				return;
+			}
+
+			IteratorType insertion_end = pair.first;
+			++insertion_end;
+
+			insert(begin, insertion_end);
+
+			begin = pair.first;
+		}
+
+	}
+
+	template <typename IteratorType>
+	void insert(IteratorType begin, IteratorType end){
+
 	}
 
 };
