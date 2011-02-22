@@ -1,8 +1,13 @@
 #include <iostream>
 
-int main(){
+#include "include/WelchTree.h"
 
-    std::cout << "poep" << std::endl;
+int main(){
+	JN::WelchTree<unsigned int> dol;
+
+	auto pair = dol.find("a");
+
+	std::cout << pair << std::endl;
 
     return 0;
 }
