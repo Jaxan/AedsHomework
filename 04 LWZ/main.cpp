@@ -18,7 +18,7 @@ std::ostream& operator<< (std::ostream &os, unsigned int * const &x){
 int main(){
 	JN::WelchTree<unsigned int> dol;
 
-	std::string query = "aapjeaaaaabab";
+	std::string query = "";
 	dol.compress(query.begin(), query.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
 
 	//std::cout << "(" << *pair.first << ", " << *pair.second << ")\n";
