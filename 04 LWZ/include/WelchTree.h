@@ -3,12 +3,18 @@
 
 #include <vector>
 #include <tuple>
+#include <exception>
 
 namespace JN {
+
+class party : public std::exception {
+	virtual const char* what() const throw() { return "parteeeh, wopwopowp"; }
+};
 
 template <typename T>
 class WelchTree {
 	struct Node {
+		// TODO: for supergeneric-code: make char a template argument (atomic type or something), see also iterators
 		T data;
 		char character;
 		Node* smaller;
@@ -70,8 +76,8 @@ private:
 
 		for(;begin != end;){
 			Node * next_node;
-			char const& current_key = *begin;
-			char const& compare_key = current_node->character;
+			auto const& current_key = *begin;
+			auto const& compare_key = current_node->character;
 				 if(current_key < compare_key) next_node = current_node->smaller;
 			else if(current_key > compare_key) next_node = current_node->greater;
 			else{
@@ -91,7 +97,42 @@ private:
 	template <typename IteratorType>
 	void insert(IteratorType begin, Node* node){
 		//std::cout << "adding new node: " << *begin << " at node: " << node->character << "." << node->data << ' ' << dataCount << ' ';
-		if(node->longer == 0) node->longer = new Node(dataCount++, *begin);
+		auto const& current_key = *begin;
+		auto new_node = new Node(dataCount++, current_key);
+
+		std::cout<< "-> instert " << current_key << " ->" << node->character;
+
+		if (node->longer == 0){
+			node->longer = new_node;
+			std::cout << std::endl;
+			return;
+		} else {
+			node = node->longer;
+		}
+
+		while(true){
+			auto const& compare_key = node->character;
+			std::cout << compare_key;
+			if(current_key < compare_key){
+				if(node->smaller == 0){
+					node->smaller = new_node;
+					break;
+				} else {
+					node = node->smaller;
+				}
+			} else if(current_key > compare_key){
+				if(node->greater == 0){
+					node->greater = new_node;
+					break;
+				} else {
+					node = node->greater;
+				}
+			} else {
+				throw party();
+			}
+		}
+
+		std::cout << std::endl;
 
 	}
 

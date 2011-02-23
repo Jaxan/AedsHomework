@@ -15,13 +15,16 @@ std::ostream& operator<< (std::ostream &os, unsigned int * const &x){
 	return os;
 }
 
-int main(){
+int main() try {
 	JN::WelchTree<unsigned int> dol;
 
-	std::string query = "";
+	std::string query = "abacababa";
 	dol.compress(query.begin(), query.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
 
 	//std::cout << "(" << *pair.first << ", " << *pair.second << ")\n";
 
     return 0;
+}
+catch (std::exception const &e){
+	std::cerr << e.what() << std::endl;
 }
