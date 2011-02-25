@@ -75,33 +75,22 @@ private:
 		std::cout << "We zoeken ";
 		std::copy(begin, end, std::ostream_iterator<char>(std::cout));
 		std::cout << ":\n";
+
 		const Node* current_node = &root_nodes[*begin++];
 		std::cout << "we beginnen: " << current_node->character;
 
-		if(current_node->longer == 0) { std::cout << std::endl; return std::make_pair(begin, current_node);}
-
-		Node * next_node = current_node->longer;
-
-		for(;begin != end;){
-			auto const& current_key = *begin;
-			auto const& compare_key = next_node->character;
-			std::cout << " -> (" << current_key << ", " << compare_key << ") ";
-				 if(current_key < compare_key) next_node = current_node->smaller;
-			else if(current_key > compare_key) next_node = current_node->greater;
-			else{
-				next_node = current_node->longer;
-				if(next_node != 0) {
-					++begin;
-					current_node = next_node;
-				}
+		const Node* next_node = current_node->longer;
+		while (begin != end && next_node != 0){
+			if (next_node->character == *begin) {
+				current_node = next_node;
+				++begin;
+			} else if (*begin < next_node->character) {
+				next_node = next_node->smaller;
+			} else {
+				next_node = next_node->greater;
 			}
-
-			if(next_node == 0) break;
-			current_node = next_node;
 		}
 
-		//Return the iterator to where we read
-		std::cout << " Klaar bij punt " << current_node->character << std::endl;
 		return std::make_pair(begin, current_node);
 	}
 
