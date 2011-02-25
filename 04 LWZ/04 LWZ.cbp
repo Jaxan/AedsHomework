@@ -32,6 +32,9 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="include\WelchTree.h" />
+		<Unit filename="include\istream_iterator_12bit.h" />
+		<Unit filename="include\ostream_iterator_12bit.h" />
+		<Unit filename="include\types.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
