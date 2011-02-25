@@ -81,15 +81,22 @@ private:
 
 		const Node* next_node = current_node->longer;
 		while (begin != end && next_node != 0){
+			std::cout << " -> " << next_node->character;
 			if (next_node->character == *begin) {
 				current_node = next_node;
+				next_node = current_node->longer;
 				++begin;
+				std::cout << " omlaag";
 			} else if (*begin < next_node->character) {
 				next_node = next_node->smaller;
+				std::cout << " links";
 			} else {
 				next_node = next_node->greater;
+				std::cout << " rechts";
 			}
 		}
+
+		std::cout << std::endl;
 
 		return std::make_pair(begin, current_node);
 	}
@@ -100,7 +107,7 @@ private:
 		auto const& current_key = *begin;
 		auto new_node = new Node(dataCount++, current_key);
 
-		std::cout << "-> instert (" << current_key << ", " << new_node->data << ") at path: " << node->character << "->";
+		std::cout << "-> insert (" << current_key << ", " << new_node->data << ") at path: " << node->character;
 
 		if (node->longer == 0){
 			node->longer = new_node;
@@ -112,7 +119,7 @@ private:
 
 		while(true){
 			auto const& compare_key = node->character;
-			std::cout << compare_key << "->";
+			std::cout << " -> " << compare_key;
 			if(current_key < compare_key){
 				if(node->smaller == 0){
 					node->smaller = new_node;

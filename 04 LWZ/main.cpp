@@ -1,5 +1,7 @@
 #include <iostream>
+#include <sstream>
 #include <iterator>
+#include <algorithm>
 
 #include "include/WelchTree.h"
 
@@ -16,12 +18,15 @@ std::ostream& operator<< (std::ostream &os, unsigned int * const &x){
 }
 
 int main() /*try*/ {
-	JN::WelchTree<unsigned int> dol;
+	JN::WelchTree<unsigned int> de;
 
-	std::string query = "abacababa";
-	dol.compress(query.begin(), query.end(), std::ostream_iterator<unsigned int>(std::cout, " "));
+	std::vector<char> string(1000);
+	std::generate(string.begin(), string.end(), []() { return rand()%4+'a'; });
 
-	//std::cout << "(" << *pair.first << ", " << *pair.second << ")\n";
+	std::stringstream output;
+	de.compress(string.begin(), string.end(), std::ostream_iterator<unsigned int>(output, " "));
+
+	std::cout << "lengte is " << output.str().length()/4 << " en inhoud: " << output.str();
 
     return 0;
 }
