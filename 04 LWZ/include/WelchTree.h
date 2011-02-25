@@ -72,9 +72,9 @@ private:
 
 	template <typename IteratorType>
 	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
-		std::cout << "We zoeken ";
+		/*std::cout << "We zoeken ";
 		std::copy(begin, end, std::ostream_iterator<char>(std::cout));
-		std::cout << ":\n";
+		std::cout << ":\n";*/
 
 		const Node* current_node = &root_nodes[*begin++];
 		std::cout << "we beginnen: " << current_node->character;
