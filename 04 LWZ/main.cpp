@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "include/WelchTree.h"
+#include "include/ostream_iterator_12bit.h"
 
 template <typename T1, typename T2>
 std::ostream& operator<< (std::ostream &os, const std::pair<T1, T2> &x){
@@ -24,9 +25,9 @@ int main() /*try*/ {
 	std::generate(string.begin(), string.end(), []() { return rand()%4+'a'; });
 
 	std::stringstream output;
-	de.compress(string.begin(), string.end(), std::ostream_iterator<unsigned int>(output, " "));
+	de.compress(string.begin(), string.end(), JN::ostream_iterator_12bit<unsigned int>(output));
 
-	std::cout << "lengte is " << output.str().length()/4 << " en inhoud: " << output.str();
+	std::cout << "lengte is " << output.str().length() << " en inhoud: " << output.str();
 
     return 0;
 }
