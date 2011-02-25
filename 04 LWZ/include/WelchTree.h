@@ -72,18 +72,28 @@ private:
 
 	template <typename IteratorType>
 	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
+		std::cout << "We zoeken ";
+		std::copy(begin, end, std::ostream_iterator<char>(std::cout));
+		std::cout << ":\n";
 		const Node* current_node = &root_nodes[*begin++];
+		std::cout << "we beginnen: " << current_node->character;
+
+		if(current_node->longer == 0) { std::cout << std::endl; return std::make_pair(begin, current_node);}
+
+		Node * next_node = current_node->longer;
 
 		for(;begin != end;){
-			Node * next_node;
 			auto const& current_key = *begin;
-			auto const& compare_key = current_node->character;
+			auto const& compare_key = next_node->character;
+			std::cout << " -> (" << current_key << ", " << compare_key << ") ";
 				 if(current_key < compare_key) next_node = current_node->smaller;
 			else if(current_key > compare_key) next_node = current_node->greater;
 			else{
 				next_node = current_node->longer;
-				if(next_node != 0) ++begin;
-				std::cerr << "dieper zoeken\n";
+				if(next_node != 0) {
+					++begin;
+					current_node = next_node;
+				}
 			}
 
 			if(next_node == 0) break;
@@ -91,6 +101,7 @@ private:
 		}
 
 		//Return the iterator to where we read
+		std::cout << " Klaar bij punt " << current_node->character << std::endl;
 		return std::make_pair(begin, current_node);
 	}
 
@@ -100,7 +111,7 @@ private:
 		auto const& current_key = *begin;
 		auto new_node = new Node(dataCount++, current_key);
 
-		std::cout<< "-> instert " << current_key << " ->" << node->character;
+		std::cout << "-> instert (" << current_key << ", " << new_node->data << ") at path: " << node->character << "->";
 
 		if (node->longer == 0){
 			node->longer = new_node;
@@ -112,7 +123,7 @@ private:
 
 		while(true){
 			auto const& compare_key = node->character;
-			std::cout << compare_key;
+			std::cout << compare_key << "->";
 			if(current_key < compare_key){
 				if(node->smaller == 0){
 					node->smaller = new_node;
@@ -128,7 +139,12 @@ private:
 					node = node->greater;
 				}
 			} else {
-				throw party();
+				if(node->longer != 0){
+					std::cerr << "  wel dieper\n";
+				} else {
+					std::cerr << "  niet dieper\n";
+					throw party();
+				}
 			}
 		}
 

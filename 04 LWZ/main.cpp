@@ -15,7 +15,7 @@ std::ostream& operator<< (std::ostream &os, unsigned int * const &x){
 	return os;
 }
 
-int main() try {
+int main() /*try*/ {
 	JN::WelchTree<unsigned int> dol;
 
 	std::string query = "abacababa";
@@ -25,6 +25,6 @@ int main() try {
 
     return 0;
 }
-catch (std::exception const &e){
+/*catch (std::exception const &e){
 	std::cerr << e.what() << std::endl;
-}
+}*/
