@@ -20,8 +20,8 @@ std::ostream& operator<< (std::ostream &os, unsigned int * const &x){
 int main() /*try*/ {
 	JN::WelchTree<unsigned int> de;
 
-	std::vector<char> string(10000);
-	std::generate(string.begin(), string.end(), []() { return rand()%4+'a'; });
+	std::vector<char> string(100000);
+	std::generate(string.begin(), string.end(), []() { return rand()%52+'A'; });
 
 	std::stringstream output;
 	de.compress(string.begin(), string.end(), std::ostream_iterator<unsigned int>(output, " "));

@@ -72,46 +72,31 @@ private:
 
 	template <typename IteratorType>
 	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
-		/*std::cout << "We zoeken ";
-		std::copy(begin, end, std::ostream_iterator<char>(std::cout));
-		std::cout << ":\n";*/
-
 		const Node* current_node = &root_nodes[*begin++];
-		std::cout << "we beginnen: " << current_node->character;
 
 		const Node* next_node = current_node->longer;
 		while (begin != end && next_node != 0){
-			std::cout << " -> " << next_node->character;
 			if (next_node->character == *begin) {
 				current_node = next_node;
 				next_node = current_node->longer;
 				++begin;
-				std::cout << " omlaag";
 			} else if (*begin < next_node->character) {
 				next_node = next_node->smaller;
-				std::cout << " links";
 			} else {
 				next_node = next_node->greater;
-				std::cout << " rechts";
 			}
 		}
-
-		std::cout << std::endl;
 
 		return std::make_pair(begin, current_node);
 	}
 
 	template <typename IteratorType>
 	void insert(IteratorType begin, Node* node){
-		//std::cout << "adding new node: " << *begin << " at node: " << node->character << "." << node->data << ' ' << dataCount << ' ';
 		auto const& current_key = *begin;
 		auto new_node = new Node(dataCount++, current_key);
 
-		std::cout << "-> insert (" << current_key << ", " << new_node->data << ") at path: " << node->character;
-
 		if (node->longer == 0){
 			node->longer = new_node;
-			std::cout << std::endl;
 			return;
 		} else {
 			node = node->longer;
@@ -119,7 +104,6 @@ private:
 
 		while(true){
 			auto const& compare_key = node->character;
-			std::cout << " -> " << compare_key;
 			if(current_key < compare_key){
 				if(node->smaller == 0){
 					node->smaller = new_node;
@@ -135,17 +119,9 @@ private:
 					node = node->greater;
 				}
 			} else {
-				if(node->longer != 0){
-					std::cerr << "  wel dieper\n";
-				} else {
-					std::cerr << "  niet dieper\n";
-					throw party();
-				}
+				throw party();
 			}
 		}
-
-		std::cout << std::endl;
-
 	}
 
 };
