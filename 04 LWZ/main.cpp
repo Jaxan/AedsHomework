@@ -13,15 +13,15 @@ int main() /*try*/ {
 	JN::WelchTree<unsigned int> de;
 
 	// willekeurige data (in vorm van vector, mag elke soort container zijn, ook pointer, of een bestand, of een stream, ALLES MAG)
-	std::vector<char> string(60);
-	std::generate(string.begin(), string.end(), []() { return rand()%26+'A'; });
-	std::copy(string.begin(), string.end(), std::ostream_iterator<char>(std::cout, " "));
+	std::vector<char> string(10*135);
+	std::generate(string.begin(), string.end(), []() { return rand()%10*2+'A'; });
+	std::copy(string.begin(), string.end(), std::ostream_iterator<char>(std::cout));
 
 	// Hierheen schrijven, mag ook een bestand zijn of een lijst of wat je maar wilt
 	std::stringstream output;
 	de.compress(string.begin(), string.end(), std::ostream_iterator<unsigned int>(output, " "));
 
-	std::cout << "\n Geeft:\n";
+	std::cout << "\n\n";
 
 	JN::Compressor poep;
 	poep.decompress(std::istream_iterator<unsigned int>(output), std::istream_iterator<unsigned int>(), std::ostream_iterator<char>(std::cout));

@@ -32,10 +32,7 @@ public:
 		if(previous_code > table.size()) throw party();
 
 		auto previous_string = fetch(previous_code);
-		*out++ = '(';
 		std::copy(previous_string.begin(), previous_string.end(), out);
-		*out++ = ')';
-		*out++ = '\n';
 
 		while(begin != end) {
 			auto current_code = *begin++;
@@ -48,12 +45,7 @@ public:
 				insert(previous_code, current_string[0]);
 			}
 
-			std::cout << " voeg toe " << previous_string << current_string[0] << " als ";
-
-			*out++ = '(';
 			std::copy(current_string.begin(), current_string.end(), out);
-			*out++ = ')';
-			*out++ = '\n';
 
 			previous_code = current_code;
 			previous_string = current_string;
@@ -74,7 +66,6 @@ public:
 	}
 
 	void insert(unsigned int previous_code, char character){
-		std::cout << character << " met als prefix " << previous_code << " nummer " << table.size();
 		table.push_back((Code){previous_code, character});
 	}
 };
