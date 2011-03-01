@@ -1,0 +1,13 @@
+#ifndef JN_PARTY_HARDY
+#define JN_PARTY_HARDY
+
+
+namespace JN {
+
+class party : public std::exception {
+	virtual const char* what() const throw() { return "parteeeh, wopwopowp"; }
+};
+
+}
+
+#endif // JN_PARTY_HARDY

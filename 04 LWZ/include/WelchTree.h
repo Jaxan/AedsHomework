@@ -1,15 +1,13 @@
 #ifndef JN_WELCHTREE_H
 #define JN_WELCHTREE_H
 
+#include "Party.hardy"
+
 #include <vector>
 #include <tuple>
 #include <exception>
 
 namespace JN {
-
-class party : public std::exception {
-	virtual const char* what() const throw() { return "parteeeh, wopwopowp"; }
-};
 
 template <typename T>
 class WelchTree {
@@ -64,7 +62,6 @@ public:
 			begin = pair.first;
 			insert(begin, node);
 		}
-
 	}
 
 private:

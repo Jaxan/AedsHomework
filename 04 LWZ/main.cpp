@@ -4,11 +4,13 @@
 #include <iterator>
 #include <algorithm>
 
+#include "include/Compressor.h"
 #include "include/WelchTree.h"
 #include "include/ostream_iterator_12bit.h"
 #include "include/istream_iterator_12bit.h"
 
 int main() try {
+	/*
 	JN::WelchTree<unsigned int> de;
 
 	// willekeurige data (in vorm van vector, mag elke soort container zijn, ook pointer, of een bestand, of een stream, ALLES MAG)
@@ -26,6 +28,12 @@ int main() try {
 
 	output.seekg(0, std::ios_base::beg);
 	std::copy(JN::istream_iterator_12bit<unsigned int>(output), JN::istream_iterator_12bit<unsigned int>(), std::ostream_iterator<unsigned int>(std::cout, " "));
+	*/
+
+	JN::Compressor poep;
+
+	std::vector<unsigned int> a = { 97, 98, 97, 99, 256, 260 };
+	poep.decompress(a.begin(), a.end(), std::ostream_iterator<char>(std::cout));
 
     return 0;
 }
