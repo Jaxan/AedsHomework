@@ -1,6 +1,8 @@
 #ifndef JN_TYPES_H
 #define JN_TYPES_H
 
+#include <iostream>
+
 namespace JN {
 
 // iets met 24 bits

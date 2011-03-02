@@ -1,11 +1,11 @@
 #ifndef JN_OSTREAM_ITERATOR_12BIT_H
 #define JN_OSTREAM_ITERATOR_12BIT_H
 
-#include <iterator>
-#include <iostream>
-#include <iomanip>
 #include "types.h"
 #include "Party.hardy"
+
+#include <iterator>
+#include <iostream>
 
 namespace JN {
 
