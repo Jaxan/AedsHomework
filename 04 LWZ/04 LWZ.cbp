@@ -21,7 +21,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -31,6 +31,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="include\Compressor.h" />
+		<Unit filename="include\Party.hardy" />
 		<Unit filename="include\WelchTree.h" />
 		<Unit filename="include\istream_iterator_12bit.h" />
 		<Unit filename="include\ostream_iterator_12bit.h" />
