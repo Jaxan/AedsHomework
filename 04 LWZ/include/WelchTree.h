@@ -22,7 +22,7 @@ class WelchTree {
 
 		Node(T data, char c) : data(data), character(c), smaller(0), longer(0), greater(0) {}
 
-		Node* where_to(const char compare){
+		Node* where_to(const char compare) {
 			if(compare < character) return smaller;
 			if(compare > character) return greater;
 			return longer;
@@ -35,7 +35,7 @@ class WelchTree {
 public:
 
 	WelchTree() : dataCount(256) {
-		for(auto it = 0; it < 256; ++it){
+		for(auto it = 0; it < 256; ++it) {
 			root_nodes[it].data = root_nodes[it].character = it;
 		}
 	}
@@ -47,14 +47,14 @@ public:
 	}
 
 	template <typename IteratorType, typename OutputIteratorType>
-	void compress(IteratorType begin, IteratorType end, OutputIteratorType out){
-		while(begin != end){
+	void compress(IteratorType begin, IteratorType end, OutputIteratorType out) {
+		while(begin != end) {
 			auto pair = find_internal(begin, end);
 			//Write to compressed stream; increment compressed stream output iterator
 			*out++ = pair.second->data;
 
-			Node * node = const_cast<Node*>(pair.second);
-			if(pair.first == end){
+			Node* node = const_cast<Node*>(pair.second);
+			if(pair.first == end) {
 				//Done!
 				return;
 			}
@@ -72,12 +72,12 @@ private:
 		const Node* current_node = &root_nodes[(unsigned int)(*begin++)];
 
 		const Node* next_node = current_node->longer;
-		while (begin != end && next_node != 0){
-			if (next_node->character == *begin) {
+		while(begin != end && next_node != 0) {
+			if(next_node->character == *begin) {
 				current_node = next_node;
 				next_node = current_node->longer;
 				++begin;
-			} else if (*begin < next_node->character) {
+			} else if(*begin < next_node->character) {
 				next_node = next_node->smaller;
 			} else {
 				next_node = next_node->greater;
@@ -88,28 +88,28 @@ private:
 	}
 
 	template <typename IteratorType>
-	void insert(IteratorType begin, Node* node){
+	void insert(IteratorType begin, Node* node) {
 		auto const& current_key = *begin;
 		auto new_node = new Node(dataCount++, current_key);
 
-		if (node->longer == 0){
+		if(node->longer == 0) {
 			node->longer = new_node;
 			return;
 		} else {
 			node = node->longer;
 		}
 
-		while(true){
+		while(true) {
 			auto const& compare_key = node->character;
-			if(current_key < compare_key){
-				if(node->smaller == 0){
+			if(current_key < compare_key) {
+				if(node->smaller == 0) {
 					node->smaller = new_node;
 					break;
 				} else {
 					node = node->smaller;
 				}
-			} else if(current_key > compare_key){
-				if(node->greater == 0){
+			} else if(current_key > compare_key) {
+				if(node->greater == 0) {
 					node->greater = new_node;
 					break;
 				} else {

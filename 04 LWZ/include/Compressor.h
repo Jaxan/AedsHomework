@@ -35,7 +35,6 @@ public:
 
 		while(begin != end) {
 			auto current_code = *begin++;
-			std::cout << current_code << std::endl;
 			std::string current_string;
 			if(current_code == table.size()) {
 				insert(previous_code, previous_string[0]);

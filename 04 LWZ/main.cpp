@@ -10,7 +10,7 @@
 #include "include/ostream_iterator_12bit.h"
 #include "include/istream_iterator_12bit.h"
 
-int main() /*try*/ {
+int main() try {
 	JN::WelchTree<unsigned int> de;
 
 	// willekeurige data (in vorm van vector, mag elke soort container zijn, ook pointer, of een bestand, of een stream, ALLES MAG)
@@ -27,10 +27,8 @@ int main() /*try*/ {
 	JN::Compressor poep;
 	poep.decompress(JN::istream_iterator_12bit<unsigned int>(output), JN::istream_iterator_12bit<unsigned int>(), std::ostream_iterator<char>(std::cout));
 
-	std::copy(poep.table.begin(), poep.table.end(), std::ostream_iterator<JN::Compressor::Code>(std::cout));
-
-    return 0;
+	return 0;
 }
-/*catch (std::exception const &e){
+catch (std::exception const &e){
 	std::cerr << e.what() << std::endl;
-}*/
+}
