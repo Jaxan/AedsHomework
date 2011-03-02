@@ -69,7 +69,7 @@ private:
 
 	template <typename IteratorType>
 	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
-		const Node* current_node = &root_nodes[*begin++];
+		const Node* current_node = &root_nodes[(unsigned int)(*begin++)];
 
 		const Node* next_node = current_node->longer;
 		while (begin != end && next_node != 0){
@@ -116,7 +116,7 @@ private:
 					node = node->greater;
 				}
 			} else {
-				throw party();
+				throw party(std::string("JN::")+__func__+"Unexpected equality");
 			}
 		}
 	}

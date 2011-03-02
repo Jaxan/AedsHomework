@@ -1,11 +1,14 @@
 #ifndef JN_PARTY_HARDY
 #define JN_PARTY_HARDY
 
+#include <stdexcept>
 
 namespace JN {
 
-class party : public std::exception {
-	virtual const char* what() const throw() { return "parteeeh, wopwopowp"; }
+class party : public std::runtime_error {
+public:
+	party(const std::string& ewha) : std::runtime_error("Partheeh!! wopwopwop: " + ewha) {}
+
 };
 
 }

@@ -10,7 +10,7 @@
 namespace JN {
 
 class Compressor {
-
+public:
 	struct Code {
 		unsigned int prefix;
 		char character;
@@ -18,24 +18,24 @@ class Compressor {
 
 	std::vector<Code> table;
 
-public:
-	Compressor() {
-		for ( unsigned int i = 0; i < 256; ++i ) {
+	Compressor() : table() {
+		for(unsigned int i = 0; i < 256; ++i) {
 			char c = i;
-			table.push_back((Code){-1, c});
+			table.push_back((Code) {-1, c});
 		}
 	}
 
 	template <typename IteratorType, typename OutputIteratorType>
 	void decompress(IteratorType begin, IteratorType end, OutputIteratorType out) {
 		auto previous_code = *begin++;
-		if(previous_code > table.size()) throw party();
+		if(previous_code > table.size()) throw party(std::string("JN::")+__func__+"Unexpected code");
 
 		auto previous_string = fetch(previous_code);
 		std::copy(previous_string.begin(), previous_string.end(), out);
 
 		while(begin != end) {
 			auto current_code = *begin++;
+			std::cout << current_code << std::endl;
 			std::string current_string;
 			if(current_code == table.size()) {
 				insert(previous_code, previous_string[0]);
@@ -52,11 +52,11 @@ public:
 		}
 	}
 
-	std::string fetch(unsigned int code){
+	std::string fetch(unsigned int code) {
 		std::string output;
 		auto current_code = table.at(code);
 		output += current_code.character;
-		while(current_code.prefix != -1) {
+		while(current_code.prefix != (unsigned int)-1) {
 			current_code = table[current_code.prefix];
 			output += current_code.character;
 		}
@@ -65,11 +65,17 @@ public:
 		return output;
 	}
 
-	void insert(unsigned int previous_code, char character){
-		table.push_back((Code){previous_code, character});
+	void insert(unsigned int previous_code, char character) {
+		table.push_back((Code) {previous_code, character});
 	}
 };
 
+std::ostream& operator<<(std::ostream& os, const Compressor::Code& x) {
+	os << x.character << ", " << x.prefix;
+	return os;
 }
+
+}
+
 
 #endif // JN_COMPRESSOR_H
