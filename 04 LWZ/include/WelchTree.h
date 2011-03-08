@@ -11,9 +11,8 @@ namespace JN {
 template <typename T>
 class WelchTree {
 	struct Node {
-		// TODO: for supergeneric-code: make char a template argument (atomic type or something), see also iterators
 		T data;
-		char character;
+		char character;	// char moet eigenlijk ge-abstraheerd worden (we gebruiken namelijk ook iterators, waarvan we niet eisen dat ze naar char's wijzen.
 		Node* smaller;
 		Node* longer;
 		Node* greater;
@@ -29,22 +28,23 @@ class WelchTree {
 
 	};
 
-	Node root_nodes[256];
-
 public:
 
+	// c-tor, vult de root_nodes
 	WelchTree() : dataCount(256) {
 		for(auto it = 0; it < 256; ++it) {
 			root_nodes[it].data = root_nodes[it].character = it;
 		}
 	}
 
+	// wordt niet gebruikt in de compressie, maar zou een mooie functie zijn voor een welch-tree
 	template <typename IteratorType>
 	std::pair<IteratorType, T const *> find(IteratorType begin, IteratorType end) const {
 		auto pair = find_internal(begin, end);
 		return std::make_pair(pair.first, &pair.second->data);
 	}
 
+	// comprimeert wat tussen begin en end zit, en schrijft naar out.
 	template <typename IteratorType, typename OutputIteratorType>
 	void compress(IteratorType begin, IteratorType end, OutputIteratorType out) {
 		while(begin != end) {
@@ -64,8 +64,13 @@ public:
 	}
 
 private:
+	// hiermee wordt de volgende code bepaald
 	size_t dataCount;
 
+	// boomtabel, zodat we een instant-lookup hebben bij de eerste stap
+	Node root_nodes[256];
+
+	// deze functie vind de grootste prefix, returnt tot waar die heeft kunnen vinden, en de node waar die stopte met zoeken (dit is handig voor de insert, die hier meteen verder kan gaan)
 	template <typename IteratorType>
 	std::pair<IteratorType, const Node*> find_internal(IteratorType begin, IteratorType end) const {
 		const Node* current_node = &root_nodes[(unsigned int)(*begin++)];
@@ -86,6 +91,7 @@ private:
 		return std::make_pair(begin, current_node);
 	}
 
+	// ipv de iterator konden we ook een char meegeven, maar dit abstraheert van type (en is dus leuker)
 	template <typename IteratorType>
 	void insert(IteratorType begin, Node* node) {
 		auto const& current_key = *begin;
