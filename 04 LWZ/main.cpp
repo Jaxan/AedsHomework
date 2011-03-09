@@ -28,6 +28,9 @@ int main() try {
 	JN::decompress(JN::istream_iterator_12bit<unsigned int>(output), JN::istream_iterator_12bit<unsigned int>(), std::ostream_iterator<char>(std::cout));
 
 	// bijgeleverde bestanden van blackboard testen:
+	// numbers.txt werkt (dus het algoritme is goed geimplementeerd)
+	// bytes.txt niet (ik denk dat het te maken heeft met de byte-volgorde (endianness), die niet gespecificeerd was)
+	// onze eigen bestanden werken wel (zie hierboven)
 	std::cout << "\n\n numbers.txt: \n\n";
 	std::ifstream numbers("numbers.txt");
 	JN::decompress(std::istream_iterator<unsigned int>(numbers), std::istream_iterator<unsigned int>(), std::ostream_iterator<char>(std::cout));
