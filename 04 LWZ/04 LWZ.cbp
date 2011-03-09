@@ -32,8 +32,8 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="include\Compressor.h" />
+		<Unit filename="include\Decompressor.h" />
 		<Unit filename="include\Party.hardy" />
-		<Unit filename="include\WelchTree.h" />
 		<Unit filename="include\istream_iterator_12bit.h" />
 		<Unit filename="include\ostream_iterator_12bit.h" />
 		<Unit filename="include\types.h" />

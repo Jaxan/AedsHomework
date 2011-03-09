@@ -13,7 +13,7 @@
 int main() try {
 	// willekeurige data (in vorm van vector, mag elke soort container zijn, ook pointer, of een bestand, of een stream, ALLES MAG)
 	// Note: random is moeilijke te comprimeren
-	std::vector<char> string(135*20);
+	std::vector<char> string(1337);
 	std::generate(string.begin(), string.end(), []() { return rand()%3+'<'; });
 
 	// data outputten. voor verificatie
@@ -26,6 +26,14 @@ int main() try {
 
 	// weer decoden :D (meteen naar console schrijven)
 	JN::decompress(JN::istream_iterator_12bit<unsigned int>(output), JN::istream_iterator_12bit<unsigned int>(), std::ostream_iterator<char>(std::cout));
+
+	// bijgeleverde bestanden van blackboard testen:
+	std::cout << "\n\n numbers.txt: \n\n";
+	std::ifstream numbers("numbers.txt");
+	JN::decompress(std::istream_iterator<unsigned int>(numbers), std::istream_iterator<unsigned int>(), std::ostream_iterator<char>(std::cout));
+	std::cout << "\n\n bytes.txt: \n\n";
+	std::ifstream bytes("bytes.txt");
+	JN::decompress(JN::istream_iterator_12bit<unsigned int>(bytes), JN::istream_iterator_12bit<unsigned int>(), std::ostream_iterator<char>(std::cout));
 
 	return 0;
 } catch(std::exception const& e) {
