@@ -3,115 +3,102 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
+#include <stdexcept>
+
 #include "tokenizor.h"
 #include "grammar.h"
 #include "arithmetic.h"
+#include "logic.h"
 
-template <typename ID_t = std::string, typename T = bool>
-struct node {
-	virtual T pwn(std::map<ID_t, T> const& evaluation) = 0;
-};
-
-template <typename ID_t = std::string, typename T = bool>
-struct leaf : public node<T> {
-	leaf(ID_t id) : id(id) {}
-
-	virtual T pwn(std::map<ID_t, T> const& evaluation) {
-		auto it = evaluation.find(id);
-
-		if(it == evaluation.end()) {
-			std::stringstream message;
-			message << "Couldn't find value for id(" << id << ")";
-			throw std::logic_error(message.str());
-		}
-
-		return *it;
-	}
-
-	ID_t const id;
-};
-
-template <typename ID_t = std::string, typename T = bool>
-struct binary_operator_node : public node<T> {
-	binary_operator_node(binary_operator_t op) : op(op) {}
-
-	virtual T pwn(std::map<ID_t, T> const& evaluation) {
-		T left_value = left->pwn(evaluation);
-		T right_value = right->pwn(evaluation);
-
-		switch(op) {
-			// uit het dictaat van Wim Veldman :)
-		case binary_operator_t::operator_and: return std::min(left_value, right_value);
-		case binary_operator_t::operator_or: return std::max(left_value, right_value);
-		case binary_operator_t::operator_implication:
-			if(left_value <= right_value) return JN::one<T>();
-			else return right_value;
-		default: throw std::logic_error("Corrupted binary operator");
-		}
-	}
-
-	binary_operator_t op;
-	node<ID_t, T> * left;
-	node<ID_t, T>* right;
-};
-
-template <typename ID_t = std::string, typename T = bool>
-struct unary_operator_node : public node<T> {
-	unary_operator_node(unary_operator_t op) : op(op) {}
-
-	virtual T pwn(std::map<ID_t, T> const& evaluation) {
-		T value = child->pwn(evaluation);
-		switch(op) {
-		case unary_operator_t::operator_not:
-			if(value == JN::zero<T>()) return JN::one<T>();
-			else return JN::zero<T>();
-		default: throw std::logic_error("Corrupted unary operator");
-		}
-	}
-
-	unary_operator_t  op;
-	node<ID_t, T>* child;
-};
-
+template <typename InputIterator>
 struct parser {
 	typedef std::string ID_t;
 	typedef bool T;
 	typedef node<ID_t, T> node_t;
 	typedef sequent<ID_t, T> sequent_t;
 
-	parser(std::istream& is) is(is) {
-		parse();
-	}
+	parser(InputIterator is) : is(is) {}
 
 	sequent_t* parse(){
-		auto root = parse_sequent();
+		root = parse_sequent();
 
-		if(!is){
+		/*if(!is){
 			throw JN::syntax_error("End of stream expected");
-		}
+		}*/
 
 		return root;
 	}
 
 	sequent_t* parse_sequent(){
-		auto lh = parse_form();
+		auto lh = parse_list();
 
-		token current_token;
-		is >> current_token;
-		if(current_token.type != token_t::sequent){
-			throw JN::syntax_error("Expected sequent token");
+		auto current_token = *is;
+		if(current_token.type == token_t::sequent){
+			++is;
+			auto rh = parse_list();
+			return new sequent<ID_t, T>(lh, rh);
 		} else {
-			auto rh = parse_form();
-			return new sequent(lh, rh);
+			throw JN::syntax_error("Expected sequent token");
+		}
+	}
+
+	std::vector<node_t*> parse_list(){
+		auto first = parse_form();
+
+		auto current_token = *is;
+		if(current_token.type == token_t::comma){
+			++is;
+			auto rest = parse_list();
+			rest.push_back(first);
+			return rest;
+		} else {
+			return std::vector<node_t*>{first};
 		}
 	}
 
 	node_t* parse_form(){
-		auto lh =
+		auto lh = parse_basic();
+
+		auto current_token = *is;
+		if(current_token.type == token_t::binary_operator){
+			++is;
+			auto output = new binary_operator_node<ID_t, T>(current_token.b_op);
+			output->left = lh;
+			output->right = parse_form();
+			return output;
+		} else {
+			return lh;
+		}
 	}
 
+	node_t* parse_basic(){
+		auto current_token = *is++;
 
-	std::istream& is;
+		switch(current_token.type){
+			case token_t::basic:
+				return new leaf<ID_t>(current_token.string);
+			case token_t::unary_operator: {
+				auto output = new unary_operator_node<ID_t, T>(current_token.u_op);
+				output->child = parse_basic();
+				return output;
+			}
+			case token_t::open: {
+				auto form = parse_form();
+				if(is->type == token_t::close){
+					++is;
+					return form;
+				} else {
+					throw JN::syntax_error("no matching )");
+				}
+			}
+			default:
+				throw JN::syntax_error("expected basic");
+		}
+
+	}
+
+	sequent_t* root;
+	InputIterator is;
 };
-
 #endif // PARSER_H

@@ -15,6 +15,7 @@ struct token {
 	};
 
 	token() : type(), string() {}
+	token(token const & x) : type(x.type), string(x.string), b_op(x.b_op) {}
 };
 
 std::istream& operator>>(std::istream& is, token& x) {
@@ -55,8 +56,17 @@ std::istream& operator>>(std::istream& is, token& x) {
 			x.type = token_t::unary_operator;
 			x.u_op = unary_operator_t::operator_not;
 			break;
+		case '(':
+			x.type = token_t::open;
+			break;
+		case ')':
+			x.type = token_t::close;
+			break;
 		case '.':
 			x.type = token_t::sequent;
+			break;
+		case ',':
+			x.type = token_t::comma;
 			break;
 		default:
 			if (!isalpha(c)) throw JN::syntax_error(std::string("Character not recognized: '") + c + '\'');
