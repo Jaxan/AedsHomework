@@ -1,10 +1,11 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef LOGIC_H
+#define LOGIC_H
 
-#include <iostream>
 #include <map>
-#include "tokenizor.h"
-#include "grammar.h"
+#include <string>
+#include <stdexcept>
+#include <sstream>
+
 #include "arithmetic.h"
 
 template <typename ID_t = std::string, typename T = bool>
@@ -73,45 +74,10 @@ struct unary_operator_node : public node<T> {
 	node<ID_t, T>* child;
 };
 
-struct parser {
-	typedef std::string ID_t;
-	typedef bool T;
-	typedef node<ID_t, T> node_t;
-	typedef sequent<ID_t, T> sequent_t;
-
-	parser(std::istream& is) is(is) {
-		parse();
-	}
-
-	sequent_t* parse(){
-		auto root = parse_sequent();
-
-		if(!is){
-			throw JN::syntax_error("End of stream expected");
-		}
-
-		return root;
-	}
-
-	sequent_t* parse_sequent(){
-		auto lh = parse_form();
-
-		token current_token;
-		is >> current_token;
-		if(current_token.type != token_t::sequent){
-			throw JN::syntax_error("Expected sequent token");
-		} else {
-			auto rh = parse_form();
-			return new sequent(lh, rh);
-		}
-	}
-
-	node_t* parse_form(){
-		auto lh =
-	}
-
-
-	std::istream& is;
+template <typename ID_t = std::string, typename T = bool>
+struct sequent {
+	node<ID_t, T> * left;
+	node<ID_t, T>* right;
 };
 
-#endif // PARSER_H
+#endif // LOGIC_H

@@ -32,6 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include\arithmetic.h" />
+		<Unit filename="include\grammar.h" />
+		<Unit filename="include\logic.h" />
+		<Unit filename="include\parser.h" />
+		<Unit filename="include\syntax_error.h" />
+		<Unit filename="include\tokenizor.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
