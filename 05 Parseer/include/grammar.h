@@ -6,10 +6,10 @@
 
 	UOp		:==	~											not
 	BOp		:==	/\ | \/ | ->								and, or, implication, iff (all have same precendence)
-	Bas		:==	[a..Z]										any string with 'normal' characters
-	Form	:== Bas | Form BOp Form | UOp Form | (Form)		a basic formula or a combination of
+	Bas		:==	[a..Z] | (Form)								any string with 'normal' characters
+	Form	:== Bas | Form BOp Form | UOp Form		 		a basic formula or a combination of
 	List	:== Form , List | Form
-	Seq		:==	List . List									a sequental
+	Seq		:==	List . List	| e . List						a sequental
 
 
 	Om links recursie te vermijden en haakjes toe te voegen, omgeschreven tot:
@@ -20,7 +20,7 @@
 	Rest	:==	BOp Form | e
 	Bas		:==	[a..Z] | UOp Bas | (Form)
 	List	:== Form , List | Form
-	Seq		:==	List . List
+	Seq		:==	List . List | e . List
 */
 
 enum class token_t {

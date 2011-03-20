@@ -3,18 +3,27 @@
 
 #include <map>
 #include <vector>
+#include <queue>
 #include <string>
 #include <stdexcept>
 #include <sstream>
 #include <algorithm>
+#include <typeinfo>
 
 #include "arithmetic.h"
+
+/**
+	Variabelen in formules zijn van het type ID_t (als default string, dus mooie variabelenamen)
+	Waarheidswaarden zijn van type T, default bool, maar kan ook ingezet worden bij n-waardige logica.
+*/
 
 template <typename ID_t = std::string, typename T = bool>
 struct node {
 	virtual T pwn(std::map<ID_t, T> const& evaluation) = 0;
 
 	virtual void output(std::ostream& out, unsigned int level = 0) = 0;
+
+	virtual std::vector<std::pair<node<ID_t, T>>> reduce() = 0;
 
 	virtual ~node() {};
 };
@@ -99,7 +108,7 @@ struct unary_operator_node : public node<ID_t, T> {
 	virtual void output(std::ostream& out, unsigned int level){
 		auto higher_level = level + 1;
 		while(level--) out << "  ";\
-		if(dynamic_cast<leaf<ID_t, T>*>(child) != 0) {
+		if(typeid(leaf<ID_t, T>) == typeid(*child)) {
 			out << op;
 			child->output(out, 0);
 		} else {
@@ -117,6 +126,30 @@ struct sequent {
 	typedef node<ID_t, T> node_t;
 	sequent(std::vector<node_t*> lh, std::vector<node_t*> rh) : left(lh), right(rh) {}
 
+	/**
+		returnt true als de sequent gesloten is, dwz als er links en rechts iets gelijks voorkomt.
+	*/
+	bool closed(){
+		for(auto it = left.begin(); it != left.end(); ++it){
+			for(auto it2 = right.begin(); it2 != right.end(); ++it2){
+				if(**it == **it2) return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+		returnt true als de sequent open is, dwz als uit links en rechts makkelijk een tegenvoorbeeld te maken is.
+		(neem links true, rechts false)
+	*/
+	bool open(){
+		for(auto it = left.begin(); it != left.end(); ++it)
+			if(typeid(**it) != typeid(leaf<ID_t, T>)) return false;
+		for(auto it = right.begin(); it != right.end(); ++it)
+			if(typeid(**it) != typeid(leaf<ID_t, T>)) return false;
+		return !closed();
+	}
+
 	std::vector<node_t*>  left;
 	std::vector<node_t*> right;
 };
@@ -130,5 +163,47 @@ std::ostream& operator<<(std::ostream& os, const sequent<ID_t, T>& x){
 
 	return os;
 }
+
+template <typename ID_t, T>
+std::map<ID_t, T> const& counterexample(sequent<ID_t, T> const& seq){
+	std::queue<sequent<ID_t, T>> sequents_to_examine{seq};
+
+	while(!queue.empty()){
+		auto& current_sequent = sequents_to_examine.front();
+
+		for(auto it = current_sequent.left.begin(); it != current_sequent.left.end(); ++it){
+			//If it's a basic, we can't reduce it.
+			node_t const* current_node;
+			if(typeid(*current_node) == typeid(leaf<ID_t, T>)) continue;
+
+			auto options = current_node->reduce();
+			if(options.size() == 0){
+				throw std::runtime_error("reduce() didn't give any options, and it wasn't a basic.");
+			}
+
+			auto new_sequent = current_sequent;
+			new_sequent.left.erase(it);
+
+			auto add_options = [](std::pair<node<ID_t, T>> const& option, sequent<ID_t, T>& sequent){
+				sequent.left.push_back(option.first);
+				sequent.right.push_back(option.second);
+			}
+
+			add_options(options[0], new_sequent);
+
+			if(options.size() > 1){
+				auto another_new_sequent = current_sequent;
+				add_options(options[0], another_new_sequent);
+			}
+		}
+
+		for(auto it = current_sequent.right.begin(); it != current_sequent.right.end(); ++it){
+		}
+
+	}
+
+
+}
+
 
 #endif // LOGIC_H

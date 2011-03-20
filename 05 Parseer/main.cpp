@@ -8,7 +8,7 @@
 
 int main() {
 	try {
-		std::stringstream str("~((~A \\/ B)) -> Aap, Benis . ~(~(~A -> Benis) /\\ D /\\ A), B, D");
+		std::stringstream str(". ~(~(~A -> Benis) /\\ D /\\ A), B, D");
 		parser<std::istream_iterator<token>> pars0r = parser<std::istream_iterator<token>>(std::istream_iterator<token>(str));
 
 		pars0r.parse();

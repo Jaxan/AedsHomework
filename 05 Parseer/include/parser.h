@@ -23,15 +23,20 @@ struct parser {
 	sequent_t* parse(){
 		root = parse_sequent();
 
-		/*if(!is){
+		// TODO: werkt louter op istream::iterator. Life sucks.
+		if(is != InputIterator()){
 			throw JN::syntax_error("End of stream expected");
-		}*/
+		}
 
 		return root;
 	}
 
 	sequent_t* parse_sequent(){
-		auto lh = parse_list();
+		std::vector<node_t*> lh;
+		//NOTE: Case for empty left-hand operator
+		if(is->type != token_t::sequent){
+			lh = parse_list();
+		}
 
 		auto current_token = *is;
 		if(current_token.type == token_t::sequent){
