@@ -1,3 +1,6 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #include <iostream>
 #include <sstream>
 #include <iterator>
@@ -5,6 +8,15 @@
 #include "include/tokenizor.h"
 #include "include/parser.h"
 
+/**
+    inhoud project:
+        grammar.h           grammatica van onze parser
+        parser.h            de parser
+        tokenizer.h         hulpje van de parser (een >> operator)
+        logic.h             datastructuren voor proposities, sequenten en de bewijzer
+        syntax_error.h      exception
+        arithmetic.h        hulp units
+ */
 
 int main() {
 	try {

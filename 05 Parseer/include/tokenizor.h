@@ -1,14 +1,23 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef TOKENIZOR_H
 #define TOKENIZOR_H
 
+#include <iostream>
 #include <cctype>
 #include "syntax_error.h"
 #include "grammar.h"
 
+/**
+    Een token, zodat we een fijne >> operator kunnen overloaden. Hieruit haalt de parser alle informatie
+    zie ook grammar.h
+ */
 struct token {
 	token_t type;
 	std::string string;
 
+    // Union, omdat het altijd maar 1 vd 2 is (string mag niet in een union)
 	union {
 		binary_operator_t b_op;
 		unary_operator_t u_op;
@@ -18,8 +27,12 @@ struct token {
 	token(token const & x) : type(x.type), string(x.string), b_op(x.b_op) {}
 };
 
+/**
+    Haal een token uit een istream. (vooral handig met istream_iterator<token>, dan kan je itereren over tokens)
+ */
 std::istream& operator>>(std::istream& is, token& x) {
 	char c;
+    // negeer whitespace
 	do {
 		is.get(c);
 		if(!is) return is;
@@ -27,6 +40,7 @@ std::istream& operator>>(std::istream& is, token& x) {
 
 	x.string = c;
 
+    // vreselijk grote switchcase, had makkelijk mooier gekund, maar dit werkt.
 	switch(c){
 		case '/':
 			is.get(c);

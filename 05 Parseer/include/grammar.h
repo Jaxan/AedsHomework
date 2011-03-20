@@ -1,18 +1,21 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef GRAMMAR_H
 #define GRAMMAR_H
 
 /**
 	grammatica:
 
-	UOp		:==	~											not
-	BOp		:==	/\ | \/ | ->								and, or, implication, iff (all have same precendence)
-	Bas		:==	[a..Z] | (Form)								any string with 'normal' characters
-	Form	:== Bas | Form BOp Form | UOp Form		 		a basic formula or a combination of
-	List	:== Form , List | Form
-	Seq		:==	List . List	| e . List						a sequental
+	UOp		:==	~											unaire voegtekens
+	BOp		:==	/\ | \/ | ->								voegtekens (connectieven)
+	Bas		:==	[a..Z] | (Form)								een mooie naam. Net zoals in het voorbeeld, ook iets met haakjes
+	Form	:== Bas | Form BOp Form | UOp Form		 		inductieve opbouw naar formules
+	List	:== Form , List | Form                          lijstje formules (nooit leeg)
+	Seq		:==	List . List	| e . List						een sequent (rechts niks hebben staan slaat nergens op)
 
 
-	Om links recursie te vermijden en haakjes toe te voegen, omgeschreven tot:
+	Om links recursie te vermijden, omgeschreven tot:
 
 	UOP		:==	~
 	BOp		:==	/\ | \/ | ->
@@ -23,6 +26,9 @@
 	Seq		:==	List . List | e . List
 */
 
+/**
+    Types:
+ */
 enum class token_t {
 	unary_operator,
 	binary_operator,
@@ -43,6 +49,9 @@ enum class unary_operator_t {
 	operator_not
 };
 
+/**
+    Output functies:
+ */
 std::ostream& operator<<(std::ostream& os, const token_t& x){
 	switch(x){
 		case token_t::unary_operator : os << "unary_operator"; break;

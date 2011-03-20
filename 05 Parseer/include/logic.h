@@ -1,3 +1,6 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef LOGIC_H
 #define LOGIC_H
 
@@ -17,10 +20,18 @@
 	Waarheidswaarden zijn van type T, default bool, maar kan ook ingezet worden bij n-waardige logica.
 */
 
+
+/**
+    interface/abstracte klasse voor nodes (die een formuleboom vormen).
+    Zie grammar.h voor onze nodes. naamgeving spreekt voor zich.
+ */
 template <typename ID_t = std::string, typename T = bool>
 struct node {
+
+    /** Evalueer de formule met de waardes van de basis-formules */
 	virtual T pwn(std::map<ID_t, T> const& evaluation) const = 0;
 
+    /** Print de boom, level geeft indenting aan */
 	virtual void output(std::ostream& out, unsigned int level = 0) const = 0;
 
 	//We return a list of options
@@ -30,9 +41,12 @@ struct node {
 	typedef node<ID_t, T> node_t;
 	virtual std::vector<std::pair<std::vector<node_t*>, std::vector<node_t*>>> reduce(bool left) const = 0;
 
+    /** en natuurlijk de destructor, besteden we geen aandacht aan */
 	virtual ~node() {};
 };
 
+
+/** aka basisformule */
 template <typename ID_t = std::string, typename T = bool>
 struct leaf : public node<ID_t, T> {
 	typedef node<ID_t, T> node_t;
@@ -62,6 +76,7 @@ struct leaf : public node<ID_t, T> {
 	ID_t const id;
 };
 
+
 template <typename ID_t = std::string, typename T = bool>
 struct binary_operator_node : public node<ID_t, T> {
 	typedef node<ID_t, T> node_t;
@@ -73,7 +88,7 @@ struct binary_operator_node : public node<ID_t, T> {
 		T right_value = right->pwn(evaluation);
 
 		switch(op) {
-			// uit het dictaat van Wim Veldman :)
+			// uit het dictaat van Wim Veldman :), dus werkt ook met n-waardige logica
 		case binary_operator_t::operator_and: return std::min(left_value, right_value);
 		case binary_operator_t::operator_or: return std::max(left_value, right_value);
 		case binary_operator_t::operator_implication:
@@ -134,6 +149,7 @@ struct binary_operator_node : public node<ID_t, T> {
 	node<ID_t, T>* right;
 };
 
+
 template <typename ID_t = std::string, typename T = bool>
 struct unary_operator_node : public node<ID_t, T> {
 	typedef node<ID_t, T> node_t;
@@ -177,6 +193,10 @@ struct unary_operator_node : public node<ID_t, T> {
 	node<ID_t, T>* child;
 };
 
+
+/**
+    Een sequent heeft links en rechts een rijtje proposities.
+ */
 template <typename ID_t = std::string, typename T = bool>
 struct sequent {
 	typedef node<ID_t, T> node_t;
@@ -210,6 +230,8 @@ struct sequent {
 	std::vector<node_t*> right;
 };
 
+
+/** Output voor een sequent */
 template <typename ID_t = std::string, typename T = bool>
 std::ostream& operator<<(std::ostream& os, const sequent<ID_t, T>& x){
 	os << "Left:\n";
@@ -220,6 +242,7 @@ std::ostream& operator<<(std::ostream& os, const sequent<ID_t, T>& x){
 	return os;
 }
 
+/** Vind een tegenvoorbeeld bij een counterexample */
 template <typename ID_t, typename T>
 std::map<ID_t, T> const& counterexample(sequent<ID_t, T> const& seq){
 	typedef node<ID_t, T> node_t;

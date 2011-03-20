@@ -1,3 +1,6 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef PARSER_H
 #define PARSER_H
 
@@ -11,6 +14,11 @@
 #include "arithmetic.h"
 #include "logic.h"
 
+
+/**
+    De parser, was misschien mooier als groepje functies.
+    Maar de iterator kan wel als state gezien worden.
+ */
 template <typename InputIterator>
 struct parser {
 	typedef std::string ID_t;
@@ -18,8 +26,10 @@ struct parser {
 	typedef node<ID_t, T> node_t;
 	typedef sequent<ID_t, T> sequent_t;
 
+    /** Maak de parser, met een bron (iterator) */
 	parser(InputIterator is) : is(is) {}
 
+    /** parseer je bron */
 	sequent_t* parse(){
 		root = parse_sequent();
 
@@ -31,9 +41,13 @@ struct parser {
 		return root;
 	}
 
+    /**
+        Zie grammar.h voor de opbouw van de volgende functies:
+        de naamgeving spreekt voor zich.
+     */
 	sequent_t* parse_sequent(){
 		std::vector<node_t*> lh;
-		//NOTE: Case for empty left-hand operator
+		//NOTE: Geval van een lege links lijst
 		if(is->type != token_t::sequent){
 			lh = parse_list();
 		}

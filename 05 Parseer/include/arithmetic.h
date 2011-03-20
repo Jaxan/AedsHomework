@@ -1,6 +1,14 @@
+// Nick Overdijk	3029832
+// Joshua Moerman	3009408
+
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
+/**
+ 
+ Abstractie, het special getal 0 en 1 voor willekeurig type (gebruiken we in logic.h voor algemene logica)
+ 
+ */
 
 namespace JN{
 
