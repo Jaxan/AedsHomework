@@ -35,7 +35,8 @@ void AWESOME(){
 }
 
 int main(){
-	std::srand(std::time(0));
+	//Om de random seed lastiger te laten voorspellen :)
+	std::srand(std::time(0)+*(int*)0x28ff1c);
 	while(AWESOME<int>(), true);
     return 0;
 }
