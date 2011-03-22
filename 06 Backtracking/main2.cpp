@@ -4,6 +4,17 @@
 #include <iterator>
 #include <algorithm>
 
+template <typename T>
+std::ostream& operator<<(std::ostream &os, const std::vector<T> &x){
+	os << '{'; 
+	for(typename std::vector<T>::const_iterator it = x.begin(); it != x.end(); it++){
+		os << *it << ", ";
+	}
+	os << '}';
+	
+	return os;
+}
+
 
 enum veld_t : char {
 	tent = 'T',
