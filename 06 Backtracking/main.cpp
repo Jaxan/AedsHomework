@@ -12,7 +12,7 @@
 
 template <typename T, typename Iterator>
 std::vector<std::vector<T>>
-search(T goal, Iterator begin, Iterator const& end, std::vector<T> const& trace = std::vector<T>(), T const& previous_result = T(1)){
+search(T goal, Iterator begin, Iterator const& end, std::vector<T>& trace, T const& previous_result = T(1)){
 	typedef std::vector<T> trace_t;
 	typedef std::vector<trace_t> traces_t;
 
@@ -21,19 +21,28 @@ search(T goal, Iterator begin, Iterator const& end, std::vector<T> const& trace 
 
 	//Create new potential solution
 	T const current_result = previous_result**begin;
-	trace_t new_trace = trace;
-	new_trace.push_back(*begin);
+	trace.push_back(*begin);
 
 	//Was it a solution?
 	if(current_result == goal){
-		return traces_t{new_trace};
+		trace_t copy = trace;
+		trace.pop_back();
+		return traces_t{copy};
 	} else {
 		++begin;
+		traces_t y = search(goal, begin, end, trace, current_result);
+		trace.pop_back();
 		traces_t x = search(goal, begin, end, trace, previous_result);
-		traces_t y = search(goal, begin, end, new_trace, current_result);
 		std::copy(x.begin(), x.end(), std::back_inserter(y));
 		return y;
 	}
+}
+
+template <typename T, typename Iterator>
+std::vector<std::vector<T>>
+search(T goal, Iterator begin, Iterator const& end){
+	std::vector<T> ref;
+	return search(goal, begin, end, ref);
 }
 
 template <typename T>

@@ -58,14 +58,14 @@ std::istream& operator>>(std::istream& is, veld_t& x){
 struct camping {
 	std::vector<std::vector<veld_t>> veld;
 
-	std::vector<unsigned int> horizontal_tent_histogram;
-	std::vector<unsigned int> vertical_tent_histogram;
+	std::vector<unsigned int> horizontal_tent_histogram;			// read from file
+	std::vector<unsigned int> vertical_tent_histogram;				// horizontal is the sum over a row, so it's the array next to the matrix
 
-	std::vector<unsigned int> horizontal_tent_current_histogram;
-	std::vector<unsigned int> vertical_tent_current_histogram;
+	std::vector<unsigned int> horizontal_tent_current_histogram;	// our own administration
+	std::vector<unsigned int> vertical_tent_current_histogram;		// vertical is the array on the bottom
 
-	unsigned int max_tents;
-	unsigned int tents;
+	unsigned int max_tents;		// read from file
+	unsigned int tents;			// our own administration
 
 	// ctor
 	camping(std::istream& input) : veld(), horizontal_tent_current_histogram(), vertical_tent_current_histogram(), max_tents(0), tents(0) {
@@ -174,17 +174,15 @@ std::vector<camping> solve(camping& previous_result, unsigned int current_row = 
 		}
 	}
 
-	// don't copy the camping, a reference is fine
-	camping& new_result = previous_result;
 	unsigned int tent_place_row = current_row;
 	unsigned int tent_place_column = current_column;
-	new_result.place_tent(current_row, current_column);
+	previous_result.place_tent(current_row, current_column);
 
-	if(new_result.solved()){
+	if(previous_result.solved()){
 		// WE FOUND A SOLUTION, it is nice to output right away!
-		std::cout << new_result << std::endl;
-		std::vector<camping> return_value{new_result};
-		new_result.remove_tent(tent_place_row, tent_place_column);
+		std::cout << previous_result << std::endl;
+		std::vector<camping> return_value{previous_result};
+		previous_result.remove_tent(tent_place_row, tent_place_column);
 		return return_value;
 	}
 
@@ -198,7 +196,7 @@ std::vector<camping> solve(camping& previous_result, unsigned int current_row = 
 		}
 	}
 
-	auto y = solve(new_result, current_row, current_column);
+	auto y = solve(previous_result, current_row, current_column);
 	// restore the camping without thee change
 	previous_result.remove_tent(tent_place_row, tent_place_column);
 	auto x = solve(previous_result, current_row, current_column);
@@ -211,7 +209,7 @@ std::vector<camping> solve(camping& previous_result, unsigned int current_row = 
 
 
 int main(){
-	std::ifstream file("c7.txt");
+	std::ifstream file("c3.txt");
 	camping c(file);
 
 	// output the problem to solve
